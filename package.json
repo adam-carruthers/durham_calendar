@@ -1,0 +1,21 @@
+{
+  "name": "durham_calendar",
+  "version": "0.0.1",
+  "description": "A website to move your Durham timetable to Google Calendar.",
+  "license": "MIT",
+  "author": "Adam Carruthers (goodyguts)",
+  "scripts": {
+    "build": "parcel build index.html",
+    "dev": "parcel index.html --open",
+    "start": "npm run build && npm run dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  },
+  "dependencies": {
+    "luxon": "^1.24.1",
+    "noty": "^3.2.0-beta",
+    "preact": "^10.4.4"
+  }
+}
