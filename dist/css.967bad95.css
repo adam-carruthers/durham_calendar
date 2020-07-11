@@ -58,6 +58,7 @@ fieldset:disabled .show-on-disabled {
 
 .activity-select-dropdown {
   background-color: #007bff;
+  cursor: pointer;
 }
 .activity-select-dropdown:hover {
   background-color: #0055b4;
@@ -69,17 +70,36 @@ fieldset:disabled .show-on-disabled {
   background-color: #0a163b !important;
 }
 
-.activity-select-delete {
-  background-color: #dc3545;
+.activity-select-toggle {
+  font-weight: bolder;
+  width: 7.5em;
+  cursor: pointer;
 }
-.activity-select-delete:hover {
-  background-color: #93242e;
+
+.act-selected {
+  background-color: #00ff3f;
 }
-.activity-select-delete:active {
-  background-color: #521019;
+.act-selected:hover {
+  background-color: #009724;
 }
-#activity-select-fieldset:disabled .activity-select-delete {
-  background-color: #3b0a0a !important;
+.act-selected:active {
+  background-color: #00721f;
+}
+#activity-select-fieldset:disabled .act-selected {
+  background-color: #00320f !important;
+}
+
+.act-not-selected {
+  background-color: #f82c3f;
+}
+.act-not-selected:hover{
+  background-color: #a02735;
+}
+.act-not-selected:active{
+  background-color: #840f1b;
+}
+#activity-select-fieldset:disabled .act-not-selected {
+  background-color: #50070f !important;
 }
 
 #activity-edit-box {

@@ -136,7 +136,12 @@ function displayActivitySelect(modules, term) {
     ({code, title, ...module}) => ({
       code,
       title,
-      activities: module[`activities_${term}`]
+      activities: module[`activities_${term}`].map(
+        activity => ({
+          ...activity,
+          selected: (activity.type.toLowerCase().startsWith('lec'))
+        })
+      )
     })
   )
   render(h(ActivitySelect, {modules: new_modules, continue_callback: displayActivityEdit}, null), activity_select_container)

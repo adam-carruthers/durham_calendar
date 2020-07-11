@@ -21437,7 +21437,6 @@ var Activity = /*#__PURE__*/function (_Component) {
     _this = _super.call(this, props);
     _this.state = {
       dropdown: false,
-      delete_sure: false,
       day_object: _luxon.DateTime.fromISO(props.day)
     };
     return _this;
@@ -21454,14 +21453,6 @@ var Activity = /*#__PURE__*/function (_Component) {
       });
     }
   }, {
-    key: "setDeleteSure",
-    value: function setDeleteSure() {
-      this.setState({
-        delete_sure: true
-      });
-    } // TODO: Actual delete
-
-  }, {
     key: "render",
     value: function render(_ref2, _ref3) {
       var _this2 = this;
@@ -21475,10 +21466,10 @@ var Activity = /*#__PURE__*/function (_Component) {
           planned_size = _ref2.planned_size,
           start = _ref2.start,
           weeks = _ref2.weeks,
-          delete_activity = _ref2.delete_activity;
+          toggle_select = _ref2.toggle_select,
+          selected = _ref2.selected;
       var dropdown = _ref3.dropdown,
-          day_object = _ref3.day_object,
-          delete_sure = _ref3.delete_sure;
+          day_object = _ref3.day_object;
       return (0, _preact.h)("div", {
         className: "border-bottom border-secondary"
       }, (0, _preact.h)("div", {
@@ -21487,27 +21478,12 @@ var Activity = /*#__PURE__*/function (_Component) {
         className: "mr-auto pl-3 pr-3 d-flex flex-column justify-content-center align-items-start"
       }, code, code_info && (0, _preact.h)("small", {
         className: "text-muted"
-      }, code_info)), delete_sure ? (0, _preact.h)("div", {
-        className: "activity-select-delete p-3",
+      }, code_info)), (0, _preact.h)("div", {
+        className: "activity-select-toggle p-3 act-" + (selected ? "selected" : "not-selected"),
         onClick: function onClick() {
-          return delete_activity();
+          return toggle_select();
         }
-      }, (0, _preact.h)("span", null, "You sure?")) : (0, _preact.h)("div", {
-        className: "activity-select-delete p-3",
-        onClick: function onClick() {
-          return _this2.setDeleteSure();
-        }
-      }, (0, _preact.h)("svg", {
-        width: "1em",
-        height: "1em",
-        viewBox: "0 0 16 16",
-        className: "bi bi-trash-fill",
-        fill: "currentColor",
-        xmlns: "http://www.w3.org/2000/svg"
-      }, (0, _preact.h)("path", {
-        "fill-rule": "evenodd",
-        d: "M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"
-      }))), (0, _preact.h)("div", {
+      }, selected ? (0, _preact.h)("span", null, "Selected") : "Unselected"), (0, _preact.h)("div", {
         className: "activity-select-dropdown p-3",
         onClick: function onClick() {
           return _this2.toggleDropdown();
@@ -21562,7 +21538,9 @@ var Activity = /*#__PURE__*/function (_Component) {
         className: "col-sm-3 text-muted"
       }, "Weeks*:"), (0, _preact.h)("div", {
         className: "col-sm-9"
-      }, weeks.join(', '))), (0, _preact.h)("div", {
+      }, weeks.map(function (week) {
+        return week + 1;
+      }).join(', '))), (0, _preact.h)("div", {
         className: "row m-0 pt-2 pb-2"
       }, (0, _preact.h)("div", {
         className: "col-sm-3 text-muted"
@@ -21582,7 +21560,7 @@ var Activity = /*#__PURE__*/function (_Component) {
         className: "col-sm-9"
       }, planned_size)), (0, _preact.h)("div", {
         className: "small text-muted pl-3"
-      }, "Something not seem right? You can edit this info later. *Where ", day_object.toFormat('cccc'), " of Week 0 is ", day_object.toFormat('DD'), ".")));
+      }, "Something not seem right? You can edit this info later. *Where ", day_object.toFormat('cccc'), " of Week 1 is ", day_object.toFormat('DD'), ".")));
     }
   }]);
 
@@ -21607,15 +21585,17 @@ var ActivitySelect = /*#__PURE__*/function (_Component2) {
   }
 
   _createClass(ActivitySelect, [{
-    key: "delete_activity",
-    value: function delete_activity(moduleCode, activityIndex) {
+    key: "toggle_select",
+    value: function toggle_select(moduleCode, activityIndex) {
       this.setState(function (_ref4) {
         var modules = _ref4.modules;
         return {
           modules: modules.map(function (module) {
             return module.code !== moduleCode ? module : _objectSpread(_objectSpread({}, module), {}, {
-              activities: module.activities.filter(function (activity, index) {
-                return index !== activityIndex;
+              activities: module.activities.map(function (activity, index) {
+                return index !== activityIndex ? activity : _objectSpread(_objectSpread({}, activity), {}, {
+                  selected: !activity.selected
+                });
               })
             });
           })
@@ -21625,7 +21605,13 @@ var ActivitySelect = /*#__PURE__*/function (_Component2) {
   }, {
     key: "continue_click",
     value: function continue_click() {
-      this.props.continue_callback(this.state.modules);
+      this.props.continue_callback(this.state.modules.map(function (module) {
+        return _objectSpread(_objectSpread({}, module), {}, {
+          activities: module.activities.filter(function (activity) {
+            return activity.selected;
+          })
+        });
+      }));
     }
   }, {
     key: "render",
@@ -21652,11 +21638,11 @@ var ActivitySelect = /*#__PURE__*/function (_Component2) {
           className: "rounded-lg bg-light overflow-hidden"
         }, !activities.length && (0, _preact.h)("div", {
           className: "p-3"
-        }, "This module has no activities."), activities.map(function (activity, index) {
+        }, "This module has no activities."), activities.map(function (activity) {
           return (0, _preact.h)(Activity, _extends({
             key: activity.id,
-            delete_activity: function delete_activity() {
-              return _this4.delete_activity(code, index);
+            toggle_select: function toggle_select() {
+              return _this4.toggle_select(code, activity.id);
             }
           }, activity));
         })));
@@ -22363,7 +22349,11 @@ function displayActivitySelect(modules, term) {
     return {
       code: code,
       title: title,
-      activities: module["activities_".concat(term)]
+      activities: module["activities_".concat(term)].map(function (activity) {
+        return _objectSpread(_objectSpread({}, activity), {}, {
+          selected: activity.type.toLowerCase().startsWith('lec')
+        });
+      })
     };
   });
   (0, _preact.render)((0, _preact.h)(_activity_select.default, {

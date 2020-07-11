@@ -4,19 +4,15 @@ import {DateTime} from 'luxon';
 class Activity extends Component {
   constructor(props) {
     super(props);
-    this.state = {dropdown: false, delete_sure: false, day_object: DateTime.fromISO(props.day)}
+    this.state = {dropdown: false, day_object: DateTime.fromISO(props.day)}
   }
 
   toggleDropdown() {
     this.setState(({dropdown}) => ({dropdown: !dropdown}))
   }
 
-  setDeleteSure() {
-    this.setState({delete_sure: true})
-  }  // TODO: Actual delete
-
-  render({code, code_long, code_info, description, room, staff, planned_size, start, weeks, delete_activity},
-         {dropdown, day_object, delete_sure}) {
+  render({code, code_long, code_info, description, room, staff, planned_size, start, weeks, toggle_select, selected},
+         {dropdown, day_object}) {
     return (
       <div className="border-bottom border-secondary">
         <div className="d-flex align-items-stretch">
@@ -26,19 +22,9 @@ class Activity extends Component {
               <small className="text-muted">{code_info}</small>
             )}
           </div>
-          {delete_sure ? (
-              <div className="activity-select-delete p-3" onClick={() => delete_activity()}>
-                <span>You sure?</span>
-              </div>
-          ):(
-            <div className="activity-select-delete p-3" onClick={() => this.setDeleteSure()}>
-              <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-trash-fill" fill="currentColor"
-                   xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd"
-                      d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5a.5.5 0 0 0-1 0v7a.5.5 0 0 0 1 0v-7z"/>
-              </svg>
-            </div>
-          )}
+          <div className={"activity-select-toggle p-3 act-" + (selected?"selected":"not-selected")} onClick={() => toggle_select()}>
+            {selected ? (<span>Selected</span>) : ("Unselected")}
+          </div>
           <div className="activity-select-dropdown p-3" onClick={() => this.toggleDropdown()}>
             {dropdown ? (
               <svg width="1em" height="1em" viewBox="0 0 16 16" className="bi bi-caret-up-fill" fill="currentColor"
@@ -94,7 +80,7 @@ class Activity extends Component {
                 Weeks*:
               </div>
               <div className="col-sm-9">
-                {weeks.join(', ')}
+                {weeks.map(week => week+1).join(', ')}
               </div>
             </div>
             <div className="row m-0 pt-2 pb-2">
@@ -122,7 +108,7 @@ class Activity extends Component {
               </div>
             </div>
             <div className="small text-muted pl-3">
-              Something not seem right? You can edit this info later. *Where {day_object.toFormat('cccc')} of Week 0 is {day_object.toFormat('DD')}.
+              Something not seem right? You can edit this info later. *Where {day_object.toFormat('cccc')} of Week 1 is {day_object.toFormat('DD')}.
             </div>
           </div>
         )}
@@ -138,18 +124,26 @@ export default class ActivitySelect extends Component {
     this.state = {modules: props.modules}
   }
 
-  delete_activity(moduleCode, activityIndex) {
+  toggle_select(moduleCode, activityIndex) {
     this.setState(({modules}) => ({
       modules: modules.map(module =>
         module.code !== moduleCode ? module : {
           ...module,
-          activities: module.activities.filter((activity, index) => index !== activityIndex)
+          activities: module.activities.map((activity, index) => index !== activityIndex ? activity : ({
+            ...activity,
+            selected: !activity.selected
+          }))
       })
     }))
   }
 
   continue_click() {
-    this.props.continue_callback(this.state.modules)
+    this.props.continue_callback(this.state.modules.map(
+      module => ({
+        ...module,
+        activities: module.activities.filter(activity => activity.selected)
+      })
+    ))
   }
 
   render(_, {modules}) {
@@ -166,8 +160,8 @@ export default class ActivitySelect extends Component {
               <div className="rounded-lg bg-light overflow-hidden">
                 {!activities.length && <div className="p-3">This module has no activities.</div>}
                 {activities.map(
-                  (activity, index) => (
-                    <Activity key={activity.id} delete_activity={() => this.delete_activity(code, index)} {...activity} />
+                  activity => (
+                    <Activity key={activity.id} toggle_select={() => this.toggle_select(code, activity.id)} {...activity} />
                   )
                 )}
               </div>
