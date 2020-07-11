@@ -98,13 +98,13 @@ class EditableActivity extends Component {
           </div>
           <div className="mr-auto p-3 pl-0">
             The activity takes place on a <b>{day_object.toFormat('cccc')}</b>.<br/>
-            {day_object.toFormat('cccc')} of Week 0 is {day_object.toFormat('DD')}.<br/>
+            {day_object.toFormat('cccc')} of Week 1 is {day_object.toFormat('DD')}.<br/>
             The activity is on weeks:
             <div className="d-flex flex-wrap mt-2">
               {[...Array(max_week).keys()].map(
                 i => (
                   <div key={i} className={"activity-edit-week"+(weeks.includes(i) ? ' activity-active-week' : '')}>
-                    {i}
+                    {i+1}
                   </div>
                 )
               )}

@@ -21888,13 +21888,13 @@ var EditableActivity = /*#__PURE__*/function (_Component) {
         d: "M4 .5a.5.5 0 0 0-1 0V1H2a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-1V.5a.5.5 0 0 0-1 0V1H4V.5zm-2 3a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-1zM8.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1zM3 10.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1z"
       }))), (0, _preact.h)("div", {
         className: "mr-auto p-3 pl-0"
-      }, "The activity takes place on a ", (0, _preact.h)("b", null, day_object.toFormat('cccc')), ".", (0, _preact.h)("br", null), day_object.toFormat('cccc'), " of Week 0 is ", day_object.toFormat('DD'), ".", (0, _preact.h)("br", null), "The activity is on weeks:", (0, _preact.h)("div", {
+      }, "The activity takes place on a ", (0, _preact.h)("b", null, day_object.toFormat('cccc')), ".", (0, _preact.h)("br", null), day_object.toFormat('cccc'), " of Week 1 is ", day_object.toFormat('DD'), ".", (0, _preact.h)("br", null), "The activity is on weeks:", (0, _preact.h)("div", {
         className: "d-flex flex-wrap mt-2"
       }, _toConsumableArray(Array(max_week).keys()).map(function (i) {
         return (0, _preact.h)("div", {
           key: i,
           className: "activity-edit-week" + (weeks.includes(i) ? ' activity-active-week' : '')
-        }, i);
+        }, i + 1);
       })))), (0, _preact.h)("div", {
         className: "p-3"
       }, (0, _preact.h)("button", {
@@ -22194,8 +22194,6 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
-// TODO: Make module selection work by selecting what to add, not deleting
-// TODO: Check browser compatibility
 // TODO: Remove "D/" from location
 // TODO: Better timings using start + duration
 // Relevant elements
