@@ -22208,6 +22208,10 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
+// TODO: Make module selection work by selecting what to add, not deleting
+// TODO: Check browser compatibility
+// TODO: Remove "D/" from location
+// TODO: Better timings using start + duration
 // Relevant elements
 var start_fieldset = $('#start-fieldset');
 var start_form = $('#start-form');
@@ -22606,7 +22610,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "60638" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63074" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

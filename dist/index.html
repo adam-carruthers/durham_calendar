@@ -38,6 +38,10 @@
       Load your modules from the Durham website, then add it to your Google Calendar!
       First select the modules you're doing and which term you want to add.
     </p>
+    <p class="small">
+      This is a new website, things might be buggy. If you're having issues please email me at
+      adam.j.carruthers@dur... This website is only tested on Google Chrome. Other browsers aren't guaranteed to work.
+    </p>
 
     <form id="start-form">
       <fieldset id="start-fieldset">
@@ -64,6 +68,11 @@
                 Easter Term
               </label>
             </div>
+          </div>
+          <div class="text-muted small">
+            Currently the calendar is for <b>2019-20</b>. The 2020-21 calendar has not yet been released by the
+            university - if it has email me! The calendar can change a lot between terms which is why you are restricted
+            to adding only one term at a time.
           </div>
         </div>
 
@@ -132,6 +141,12 @@
       </select>
     </div>
     <button type="button" class="btn btn-light btn-lg mb-2" id="btn-authorize" disabled="">Authorize on Google</button>
+    <div class="small text-light mb-2">
+      You will be asked for permissions. These are necessary to be able to add the timetable to your calendar.
+      But don't worry! We do not store any of your data.
+      Why do we need your email and profile picture?
+      Because Google automatically gives us access to this information, there is no way for us to turn this off!
+    </div>
     <button type="button" class="btn btn-light btn-lg mb-5" id="btn-magic" disabled="">Magic!</button>
     <button type="button" class="btn btn-light mb-2" id="btn-sign-out" disabled="">Sign Out of Google</button>
   </div>
