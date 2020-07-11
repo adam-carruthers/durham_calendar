@@ -6,6 +6,13 @@ import {h, render} from 'preact';
 import {DateTime} from 'luxon';
 import {act} from "preact/test-utils";
 
+// TODO: Make module selection work by selecting what to add, not deleting
+// TODO: Add my email to the website
+// TODO: Add a warning that the website calendar is for 2019/20
+// TODO: Check browser compatibility
+// TODO: Remove "D/" from location
+// TODO: Better timings using start + duration
+
 // Relevant elements
 const start_fieldset = $('#start-fieldset');
 const start_form = $('#start-form');
