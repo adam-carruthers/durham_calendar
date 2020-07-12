@@ -1,5 +1,6 @@
 import {h, Component, Fragment} from "preact";
 import {DateTime} from 'luxon';
+import Noty from "noty";
 
 class Activity extends Component {
   constructor(props) {
@@ -138,12 +139,22 @@ export default class ActivitySelect extends Component {
   }
 
   continue_click() {
-    this.props.continue_callback(this.state.modules.map(
+    const selected_modules = this.state.modules.map(
       module => ({
         ...module,
         activities: module.activities.filter(activity => activity.selected)
       })
-    ))
+    ).filter(module => module.activities.length > 0)
+    if (selected_modules.length === 0) {
+      new Noty({
+        type: 'error',
+        text: 'You have not selected any activities. To continue one activity must be selected.',
+        layout: 'bottomLeft',
+        timeout: 3000
+      }).show();
+      return;
+    }
+    this.props.continue_callback(selected_modules)
   }
 
   render(_, {modules}) {
