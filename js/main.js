@@ -6,6 +6,7 @@ import {h, render} from 'preact';
 import {DateTime} from 'luxon';
 import {act} from "preact/test-utils";
 
+// TODO: Replace JSX classname formatting stuff with the npm classnames library
 
 // Relevant elements
 const start_fieldset = $('#start-fieldset');
@@ -184,6 +185,7 @@ function displayActivityEdit(selected_modules) {
 Planned size: ${activity.planned_size}
 Code: ${activity.code_long}
 Description: ${activity.description}`,
+          color: null,
           timings: activity.weeks.map(
             week =>
               DateTime.fromISO(activity.day+'T'+activity.start, {zone: 'Europe/London'})
@@ -194,15 +196,7 @@ Description: ${activity.description}`,
       )
     })
   )
-  if (selected_modules.length === 0) {
-    new Noty({
-      type: 'error',
-      text: 'There are no activities to add to the calendar. If this was a mistake, refresh the page.',
-      layout: 'bottomLeft'
-    }).show();
-    return;
-  }
-  render(h(ActivityEdit, {modules: selected_modules, continue_callback: almostThere}, null), activity_edit_container)
+  render(h(ActivityEdit, {modules: selected_modules, continue_callback: almostThere, event_colors}, null), activity_edit_container)
   goToState(4);
   window.scrollBy(0, 60);
 }
@@ -227,6 +221,9 @@ const btn_magic = $('#btn-magic');
 const btn_sign_out_1 = $('#btn-sign-out-1');
 const btn_sign_out_2 = $('#btn-sign-out-2');
 
+let event_colors = {}  // Google's event colours, when loaded, will be stored in this variable.
+let calendar_colors = {}  // Google's calendar colors, when loaded, will be stored in this variable.
+
 function updateGoogleSignInStatus(isSignedIn) {
   if (isSignedIn) {
     btn_authorize.attr('disabled', true);
@@ -234,6 +231,19 @@ function updateGoogleSignInStatus(isSignedIn) {
     btn_magic.attr('disabled', false);
     btn_sign_out_1.attr('disabled', false);
     btn_sign_out_2.attr('disabled', false);
+
+    gapi.client.calendar.colors.get().then(json => {
+      event_colors = json.result.event;
+      calendar_colors = json.result.calendar;
+    }).catch(err => {
+      console.log(err);
+      new Noty({
+        type: 'error',
+        layout: 'bottomLeft',
+        text: 'Loading colors failed. Sign out and sign back into Google to try again.',
+        timeout: 2000
+      })
+    })
   } else {
     btn_authorize.attr('disabled', false);
     btn_sign_in_continue.attr('disabled', true);
@@ -337,20 +347,20 @@ function handleMagicClick() {
 
     final_module_list.forEach(
       module => module.activities.forEach(
-        ({title, room, cal_description, final_timings}) =>
+        ({title, room, cal_description, final_timings, color}) =>
           final_timings.forEach(
             timing => {
             const event = {
               calendarId: generatedCalendar.id,
               summary: title,
               location: room,
+              colorId: color && color.color_id,
               description: cal_description,
               ...timing,
               reminders: {
                 useDefault: true
               }
             };
-            console.log(event)
             const request = gapi.client.calendar.events.insert(event);
             eventBatch.add(request)
           }

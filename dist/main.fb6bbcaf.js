@@ -21394,6 +21394,10 @@ var _preact = require("preact");
 
 var _luxon = require("luxon");
 
+var _noty = _interopRequireDefault(require("noty"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
@@ -21605,13 +21609,27 @@ var ActivitySelect = /*#__PURE__*/function (_Component2) {
   }, {
     key: "continue_click",
     value: function continue_click() {
-      this.props.continue_callback(this.state.modules.map(function (module) {
+      var selected_modules = this.state.modules.map(function (module) {
         return _objectSpread(_objectSpread({}, module), {}, {
           activities: module.activities.filter(function (activity) {
             return activity.selected;
           })
         });
-      }));
+      }).filter(function (module) {
+        return module.activities.length > 0;
+      });
+
+      if (selected_modules.length === 0) {
+        new _noty.default({
+          type: 'error',
+          text: 'You have not selected any activities. To continue one activity must be selected.',
+          layout: 'bottomLeft',
+          timeout: 3000
+        }).show();
+        return;
+      }
+
+      this.props.continue_callback(selected_modules);
     }
   }, {
     key: "render",
@@ -21661,7 +21679,7 @@ var ActivitySelect = /*#__PURE__*/function (_Component2) {
 }(_preact.Component);
 
 exports.default = ActivitySelect;
-},{"preact":"node_modules/preact/dist/preact.module.js","luxon":"node_modules/luxon/build/cjs-browser/luxon.js"}],"js/activity_edit.jsx":[function(require,module,exports) {
+},{"preact":"node_modules/preact/dist/preact.module.js","luxon":"node_modules/luxon/build/cjs-browser/luxon.js","noty":"node_modules/noty/lib/noty.js"}],"js/activity_edit.jsx":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -21683,9 +21701,15 @@ function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (O
 
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 
@@ -21698,6 +21722,8 @@ function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.it
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -21733,6 +21759,7 @@ var EditableActivity = /*#__PURE__*/function (_Component) {
     _this.state = {
       delete_sure: false,
       edit_timings: false,
+      color_dropdown: false,
       unique_id: props.module_code.replace('/', '-').replace(' ', '') + '-' + props.id,
       day_object: _luxon.DateTime.fromISO(props.day)
     };
@@ -21740,18 +21767,10 @@ var EditableActivity = /*#__PURE__*/function (_Component) {
   }
 
   _createClass(EditableActivity, [{
-    key: "setDeleteSure",
-    value: function setDeleteSure() {
-      this.setState({
-        delete_sure: true
-      });
-    }
-  }, {
-    key: "setEditTimings",
-    value: function setEditTimings() {
-      this.setState({
-        edit_timings: true
-      });
+    key: "setPropertyBool",
+    value: function setPropertyBool(prop) {
+      var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+      this.setState(_defineProperty({}, prop, value));
     }
   }, {
     key: "render",
@@ -21769,11 +21788,14 @@ var EditableActivity = /*#__PURE__*/function (_Component) {
           end = _ref.end,
           timings = _ref.timings,
           change_property = _ref.change_property,
-          delete_activity = _ref.delete_activity;
+          delete_activity = _ref.delete_activity,
+          event_colors = _ref.event_colors,
+          color = _ref.color;
       var delete_sure = _ref2.delete_sure,
           edit_timings = _ref2.edit_timings,
           unique_id = _ref2.unique_id,
-          day_object = _ref2.day_object;
+          day_object = _ref2.day_object,
+          color_dropdown = _ref2.color_dropdown;
       return (0, _preact.h)("div", {
         className: "rounded-lg bg-light overflow-hidden mb-3 pt-2 pb-2"
       }, (0, _preact.h)("div", {
@@ -21896,23 +21918,53 @@ var EditableActivity = /*#__PURE__*/function (_Component) {
           className: "activity-edit-week" + (weeks.includes(i) ? ' activity-active-week' : '')
         }, i + 1);
       })))), (0, _preact.h)("div", {
-        className: "p-3"
+        className: "pl-3 pr-3 w-100"
       }, (0, _preact.h)("button", {
-        className: "btn btn-warning mr-3",
+        className: "btn btn-warning mr-3 mb-2",
         onClick: function onClick() {
-          return _this2.setEditTimings();
+          return _this2.setPropertyBool('edit_timings', true);
         }
       }, "Edit Timings"), delete_sure ? (0, _preact.h)("button", {
-        className: "btn btn-danger",
+        className: "btn btn-danger mr-3 mb-2",
         onClick: function onClick() {
           return delete_activity();
         }
       }, "You sure?") : (0, _preact.h)("button", {
-        className: "btn btn-danger",
+        className: "btn btn-danger mr-3 mb-2",
         onClick: function onClick() {
-          return _this2.setDeleteSure();
+          return _this2.setPropertyBool('delete_sure', true);
         }
-      }, "Delete Activity")));
+      }, "Delete Activity"), (0, _preact.h)("button", {
+        className: "mb-2 btn" + (color ? "" : " btn-dark"),
+        style: color && {
+          'background-color': color.background
+        },
+        onClick: function onClick() {
+          return _this2.setPropertyBool('color_dropdown', true);
+        }
+      }, "Set color (currently ", color ? "this" : "not set", ")")), color_dropdown && (0, _preact.h)("div", {
+        className: "d-flex flex-wrap pl-3 pr-3 pt-2"
+      }, Object.entries(event_colors).map(function (_ref3) {
+        var _ref4 = _slicedToArray(_ref3, 2),
+            color_id = _ref4[0],
+            ev_color = _ref4[1];
+
+        return (0, _preact.h)("div", {
+          className: "activity-color-pick rounded-circle mr-2 mb-2",
+          style: {
+            'background-color': ev_color.background
+          },
+          onClick: function onClick() {
+            change_property("color", {
+              color_id: color_id,
+              background: ev_color.background,
+              foreground: ev_color.foreground
+            });
+
+            _this2.setPropertyBool('color_dropdown', false);
+          }
+        });
+      })));
     }
   }]);
 
@@ -21955,7 +22007,6 @@ var ActivityEdit = /*#__PURE__*/function (_Component2) {
     key: "continue_click",
     value: function continue_click() {
       // First convert and check the dates are okay
-      console.log('registered click!');
       var incorrect_datetime = false;
       var output_modules = this.state.modules.map(function (module) {
         return _objectSpread(_objectSpread({}, module), {}, {
@@ -22014,8 +22065,8 @@ var ActivityEdit = /*#__PURE__*/function (_Component2) {
   }, {
     key: "change_property",
     value: function change_property(module_code, activity_id, property, new_value) {
-      this.setState(function (_ref3) {
-        var modules = _ref3.modules;
+      this.setState(function (_ref5) {
+        var modules = _ref5.modules;
         return {
           modules: modules.map(function (module) {
             return module.code !== module_code ? module : _objectSpread(_objectSpread({}, module), {}, {
@@ -22030,8 +22081,8 @@ var ActivityEdit = /*#__PURE__*/function (_Component2) {
   }, {
     key: "delete_activity",
     value: function delete_activity(module_code, activity_id) {
-      this.setState(function (_ref4) {
-        var modules = _ref4.modules;
+      this.setState(function (_ref6) {
+        var modules = _ref6.modules;
         return {
           modules: modules.map(function (module) {
             return module.code !== module_code ? module : _objectSpread(_objectSpread({}, module), {}, {
@@ -22044,18 +22095,37 @@ var ActivityEdit = /*#__PURE__*/function (_Component2) {
       });
     }
   }, {
+    key: "change_color_of_module",
+    value: function change_color_of_module(module_code, color) {
+      this.setState(function (_ref7) {
+        var modules = _ref7.modules;
+        return {
+          modules: modules.map(function (module) {
+            return module.code !== module_code ? module : _objectSpread(_objectSpread({}, module), {}, {
+              activities: module.activities.map(function (activity) {
+                return _objectSpread(_objectSpread({}, activity), {}, {
+                  color: color
+                });
+              })
+            });
+          })
+        };
+      });
+    }
+  }, {
     key: "render",
-    value: function render(_, _ref5) {
+    value: function render(_ref8, _ref9) {
       var _this4 = this;
 
-      var modules = _ref5.modules,
-          max_week = _ref5.max_week;
+      var event_colors = _ref8.event_colors;
+      var modules = _ref9.modules,
+          max_week = _ref9.max_week;
       return (0, _preact.h)("div", {
         className: "mb-5"
-      }, modules.map(function (_ref6) {
-        var code = _ref6.code,
-            title = _ref6.title,
-            activities = _ref6.activities;
+      }, modules.map(function (_ref10) {
+        var code = _ref10.code,
+            title = _ref10.title,
+            activities = _ref10.activities;
         return (0, _preact.h)("div", {
           className: "mb-5",
           key: code
@@ -22065,11 +22135,34 @@ var ActivityEdit = /*#__PURE__*/function (_Component2) {
           className: "text-muted"
         }, code)) : (0, _preact.h)("h3", {
           className: "border-left pl-3 text-light mb-2"
-        }, code), activities.map(function (activity) {
+        }, code), (0, _preact.h)("div", {
+          className: "rounded-lg bg-light overflow-hidden mb-1 pt-2 pb-2 pl-3 pr-3"
+        }, "Set color of all activities in module at once:", (0, _preact.h)("div", {
+          className: "d-flex flex-wrap pt-2"
+        }, Object.entries(event_colors).map(function (_ref11) {
+          var _ref12 = _slicedToArray(_ref11, 2),
+              color_id = _ref12[0],
+              ev_color = _ref12[1];
+
+          return (0, _preact.h)("div", {
+            className: "activity-color-pick rounded-circle mr-2 mb-2",
+            style: {
+              'background-color': ev_color.background
+            },
+            onClick: function onClick() {
+              return _this4.change_color_of_module(code, {
+                color_id: color_id,
+                background: ev_color.background,
+                foreground: ev_color.foreground
+              });
+            }
+          });
+        }))), activities.map(function (activity) {
           return (0, _preact.h)(EditableActivity, _extends({
             key: activity.id,
             max_week: max_week,
             module_code: code,
+            event_colors: event_colors,
             change_property: function change_property(property, new_value) {
               return _this4.change_property(code, activity.id, property, new_value);
             },
@@ -22194,6 +22287,7 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
+// TODO: Replace JSX classname formatting stuff with the npm classnames library
 // Relevant elements
 var start_fieldset = $('#start-fieldset');
 var start_form = $('#start-form');
@@ -22395,6 +22489,7 @@ function displayActivityEdit(selected_modules) {
         return _objectSpread(_objectSpread({}, activity), {}, {
           title: "".concat(activity.type, " ").concat(activity.description || module.title || (!activity.type.includes(module.code) ? '' : module.code)),
           cal_description: "Staff: ".concat(activity.staff, "\nPlanned size: ").concat(activity.planned_size, "\nCode: ").concat(activity.code_long, "\nDescription: ").concat(activity.description),
+          color: null,
           timings: activity.weeks.map(function (week) {
             return _luxon.DateTime.fromISO(activity.day + 'T' + activity.start, {
               zone: 'Europe/London'
@@ -22410,19 +22505,10 @@ function displayActivityEdit(selected_modules) {
       })
     });
   });
-
-  if (selected_modules.length === 0) {
-    new _noty.default({
-      type: 'error',
-      text: 'There are no activities to add to the calendar. If this was a mistake, refresh the page.',
-      layout: 'bottomLeft'
-    }).show();
-    return;
-  }
-
   (0, _preact.render)((0, _preact.h)(_activity_edit.default, {
     modules: selected_modules,
-    continue_callback: almostThere
+    continue_callback: almostThere,
+    event_colors: event_colors
   }, null), activity_edit_container);
   goToState(4);
   window.scrollBy(0, 60);
@@ -22446,6 +22532,9 @@ var btn_authorize = $('#btn-authorize');
 var btn_magic = $('#btn-magic');
 var btn_sign_out_1 = $('#btn-sign-out-1');
 var btn_sign_out_2 = $('#btn-sign-out-2');
+var event_colors = {}; // Google's event colours, when loaded, will be stored in this variable.
+
+var calendar_colors = {}; // Google's calendar colors, when loaded, will be stored in this variable.
 
 function updateGoogleSignInStatus(isSignedIn) {
   if (isSignedIn) {
@@ -22454,6 +22543,18 @@ function updateGoogleSignInStatus(isSignedIn) {
     btn_magic.attr('disabled', false);
     btn_sign_out_1.attr('disabled', false);
     btn_sign_out_2.attr('disabled', false);
+    gapi.client.calendar.colors.get().then(function (json) {
+      event_colors = json.result.event;
+      calendar_colors = json.result.calendar;
+    }).catch(function (err) {
+      console.log(err);
+      new _noty.default({
+        type: 'error',
+        layout: 'bottomLeft',
+        text: 'Loading colors failed. Sign out and sign back into Google to try again.',
+        timeout: 2000
+      });
+    });
   } else {
     btn_authorize.attr('disabled', false);
     btn_sign_in_continue.attr('disabled', true);
@@ -22554,12 +22655,14 @@ function handleMagicClick() {
         var title = _ref3.title,
             room = _ref3.room,
             cal_description = _ref3.cal_description,
-            final_timings = _ref3.final_timings;
+            final_timings = _ref3.final_timings,
+            color = _ref3.color;
         return final_timings.forEach(function (timing) {
           var event = _objectSpread(_objectSpread({
             calendarId: generatedCalendar.id,
             summary: title,
             location: room,
+            colorId: color && color.color_id,
             description: cal_description
           }, timing), {}, {
             reminders: {
@@ -22567,7 +22670,6 @@ function handleMagicClick() {
             }
           });
 
-          console.log(event);
           var request = gapi.client.calendar.events.insert(event);
           eventBatch.add(request);
         });

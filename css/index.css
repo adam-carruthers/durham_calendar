@@ -123,3 +123,9 @@ fieldset:disabled .show-on-disabled {
   background-color: black;
   color: white;
 }
+
+.activity-color-pick {
+  width: 2em;
+  height: 2em;
+  cursor: pointer;
+}

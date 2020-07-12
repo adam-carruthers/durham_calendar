@@ -124,5 +124,11 @@ fieldset:disabled .show-on-disabled {
   color: white;
 }
 
+.activity-color-pick {
+  width: 2em;
+  height: 2em;
+  cursor: pointer;
+}
+
 
 /*# sourceMappingURL=/css.967bad95.css.map */

@@ -8,22 +8,19 @@ class EditableActivity extends Component {
     this.state = {
       delete_sure: false,
       edit_timings: false,
+      color_dropdown: false,
       unique_id: props.module_code.replace('/', '-').replace(' ', '') + '-' + props.id,
       day_object: DateTime.fromISO(props.day)
     }
   }
 
-  setDeleteSure() {
-    this.setState({delete_sure: true})
-  }
-
-  setEditTimings() {
-    this.setState({edit_timings: true})
+  setPropertyBool(prop, value=true) {
+    this.setState({[prop]: value})
   }
 
   render({id, title, room, cal_description, code_info, weeks, max_week, start, end, timings,
-           change_property, delete_activity},
-         {delete_sure, edit_timings, unique_id, day_object}) {
+           change_property, delete_activity, event_colors, color},
+         {delete_sure, edit_timings, unique_id, day_object, color_dropdown}) {
     return (
       <div className="rounded-lg bg-light overflow-hidden mb-3 pt-2 pb-2">
         <div className="form-group row m-0 pt-2 pb-2">
@@ -111,14 +108,36 @@ class EditableActivity extends Component {
             </div>
           </div>
         </div>
-        <div className="p-3">
-          <button className="btn btn-warning mr-3" onClick={() => this.setEditTimings()}>Edit Timings</button>
+        <div className="pl-3 pr-3 w-100">
+          <button className="btn btn-warning mr-3 mb-2" onClick={() => this.setPropertyBool('edit_timings', true)}>Edit Timings</button>
           {delete_sure ? (
-            <button className="btn btn-danger" onClick={() => delete_activity()}>You sure?</button>
+            <button className="btn btn-danger mr-3 mb-2" onClick={() => delete_activity()}>You sure?</button>
           ) : (
-            <button className="btn btn-danger" onClick={() => this.setDeleteSure()}>Delete Activity</button>
+            <button className="btn btn-danger mr-3 mb-2" onClick={() => this.setPropertyBool('delete_sure', true)}>Delete Activity</button>
           )}
+          <button className={"mb-2 btn"+(color ? "" : " btn-dark")} style={color && {'background-color': color.background}}
+                  onClick={() => this.setPropertyBool('color_dropdown', true)}>
+            Set color (currently {color ? "this" : "not set"})
+          </button>
         </div>
+        {color_dropdown && (
+          <div className="d-flex flex-wrap pl-3 pr-3 pt-2">
+            {
+              Object.entries(event_colors).map(([color_id, ev_color]) => (
+                <div className="activity-color-pick rounded-circle mr-2 mb-2"
+                     style={{'background-color': ev_color.background}}
+                     onClick={() => {
+                       change_property("color", {
+                         color_id: color_id,
+                         background: ev_color.background,
+                         foreground: ev_color.foreground
+                       });
+                       this.setPropertyBool('color_dropdown', false)
+                     }} />
+              ))
+            }
+          </div>
+        )}
       </div>
     )
   }
@@ -145,7 +164,6 @@ export default class ActivityEdit extends Component {
 
   continue_click() {
     // First convert and check the dates are okay
-    console.log('registered click!')
     let incorrect_datetime = false;
     const output_modules = this.state.modules.map(
       module => ({
@@ -214,7 +232,19 @@ export default class ActivityEdit extends Component {
       )}))
   }
 
-  render(_, {modules, max_week}) {
+  change_color_of_module(module_code, color) {
+    this.setState(({modules}) => ({modules: modules.map(
+      module => module.code !== module_code ? module : {
+        ...module,
+        activities : module.activities.map(activity => ({
+          ...activity,
+          color
+        }))
+      }
+      )}))
+  }
+
+  render({event_colors}, {modules, max_week}) {
     return (
       <div className="mb-5">
         {modules.map(
@@ -226,9 +256,25 @@ export default class ActivityEdit extends Component {
               ) : (
                 <h3 className="border-left pl-3 text-light mb-2">{code}</h3>
               )}
+              <div className="rounded-lg bg-light overflow-hidden mb-1 pt-2 pb-2 pl-3 pr-3">
+                Set color of all activities in module at once:
+                <div className="d-flex flex-wrap pt-2">
+                  {
+                    Object.entries(event_colors).map(([color_id, ev_color]) => (
+                      <div className="activity-color-pick rounded-circle mr-2 mb-2"
+                           style={{'background-color': ev_color.background}}
+                           onClick={() => this.change_color_of_module(code, {
+                             color_id: color_id,
+                             background: ev_color.background,
+                             foreground: ev_color.foreground
+                           })} />
+                    ))
+                  }
+                </div>
+              </div>
               {activities.map(
                 activity => (
-                  <EditableActivity key={activity.id} max_week={max_week} module_code={code}
+                  <EditableActivity key={activity.id} max_week={max_week} module_code={code} event_colors={event_colors}
                                     change_property={(property, new_value) =>
                                       this.change_property(code, activity.id, property, new_value)}
                                     delete_activity={() => this.delete_activity(code, activity.id)}
