@@ -256,8 +256,8 @@ export default class ActivityEdit extends Component {
               ) : (
                 <h3 className="border-left pl-3 text-light mb-2">{code}</h3>
               )}
-              <div className="rounded-lg bg-light overflow-hidden mb-1 pt-2 pb-2 pl-3 pr-3">
-                Set color of all activities in module at once:
+              <div className="rounded-lg font-weight-bold bg-light overflow-hidden mb-1 pt-2 pb-2 pl-3 pr-3">
+                Set color of all activities (e.g. lectures, tutorials, seminars) in this module at once:
                 <div className="d-flex flex-wrap pt-2">
                   {
                     Object.entries(event_colors).map(([color_id, ev_color]) => (
