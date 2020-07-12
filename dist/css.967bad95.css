@@ -48,12 +48,18 @@ fieldset:disabled .show-on-disabled {
   display: block;
 }
 
-#loading-box {
+/* Hide the boxes further down the page until they're needed. */
+#loading-box,
+#sign-in-box,
+#activity-select-box,
+#activity-edit-box,
+#final-box {
   display: none;
 }
 
-#activity-select-box {
-  display: none;
+#btn-authorize img {
+  height: 1.5em;
+  width: 1.5em;
 }
 
 .activity-select-dropdown {
@@ -102,10 +108,6 @@ fieldset:disabled .show-on-disabled {
   background-color: #50070f !important;
 }
 
-#activity-edit-box {
-  display: none;
-}
-
 .activity-edit-week {
   display: flex;
   justify-content: center;
@@ -120,10 +122,6 @@ fieldset:disabled .show-on-disabled {
 .activity-edit-week.activity-active-week {
   background-color: black;
   color: white;
-}
-
-#final-box {
-  display: none;
 }
 
 

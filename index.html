@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title></title>
+  <title>Durham Calendar</title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -91,6 +91,27 @@
     </div>
   </div>
 
+  <div id="sign-in-box" class="flex-column text-center mb-5">
+    <button type="button" class="btn btn-light btn-lg mb-2" id="btn-authorize" disabled>
+      <img class="mr-1 mb-1" src="google-logo.png" />
+      Login to Google
+    </button>
+    <button type="button" class="btn btn-light mb-2" id="btn-sign-out-1" disabled>Sign Out of Google</button>
+    <div class="small text-light mb-2">
+      You will be asked for permissions. These are necessary to be able to add the timetable to your calendar.
+      But don't worry! We do not store any of your data.
+      Why do we need your email and profile picture?
+      Because Google automatically gives us access to this information, there is no way for us to turn this off!
+    </div>
+
+    <div class="text-left mt-3">
+      <small class="text-muted">When you're signed in</small><br>
+      <fieldset id="sign-in-fieldset">
+        <button type="button" class="btn btn-primary" id="btn-sign-in-continue" disabled>Continue</button>
+      </fieldset>
+    </div>
+  </div>
+
   <div id="activity-select-box" class="mb-5">
     <h3 class="text-white">Activity Selector</h3>
     <p class="text-white">
@@ -141,15 +162,8 @@
         <option value="10">10 minutes before</option>
       </select>
     </div>
-    <button type="button" class="btn btn-light btn-lg mb-2" id="btn-authorize" disabled>Authorize on Google</button>
-    <div class="small text-light mb-2">
-      You will be asked for permissions. These are necessary to be able to add the timetable to your calendar.
-      But don't worry! We do not store any of your data.
-      Why do we need your email and profile picture?
-      Because Google automatically gives us access to this information, there is no way for us to turn this off!
-    </div>
     <button type="button" class="btn btn-light btn-lg mb-5" id="btn-magic" disabled>Magic!</button>
-    <button type="button" class="btn btn-light mb-2" id="btn-sign-out" disabled>Sign Out of Google</button>
+    <button type="button" class="btn btn-light mb-2" id="btn-sign-out-2" disabled>Sign Out of Google</button>
   </div>
 </div>
 

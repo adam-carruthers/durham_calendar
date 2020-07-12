@@ -6,14 +6,15 @@ import {h, render} from 'preact';
 import {DateTime} from 'luxon';
 import {act} from "preact/test-utils";
 
-// TODO: Remove "D/" from location
-// TODO: Better timings using start + duration
 
 // Relevant elements
 const start_fieldset = $('#start-fieldset');
 const start_form = $('#start-form');
 const module_select = $('#module-select');
 const loading_box = $('#loading-box');
+const sign_in_box = $('#sign-in-box');
+const sign_in_fieldset = $('#sign-in-fieldset');
+const btn_sign_in_continue = $('#btn-sign-in-continue');
 const activity_select_box = $('#activity-select-box');
 const activity_select_container = document.getElementById('activity-select-container');
 const activity_select_fieldset = $('#activity-select-fieldset');
@@ -23,6 +24,7 @@ const activity_edit_fieldset = $('#activity-edit-fieldset');
 const final_box = $('#final-box');
 
 // State transition code
+// How to display when you are before, on or after the current state
 const STATES = [
   {  // State 0: Start Form
     before: () => start_fieldset.attr('disabled', true),
@@ -34,7 +36,21 @@ const STATES = [
     on: () => loading_box.css('display', 'flex'),
     after: () => loading_box.css('display', 'none')
   },
-  {  // State 2: Activity Select
+  {  // State 2: Google sign in
+    before: () => {
+      sign_in_box.css('display', 'flex');
+      sign_in_fieldset.attr('disabled', true)
+    },
+    on: () => {
+      sign_in_box.css('display', 'flex');
+      sign_in_fieldset.attr('disabled', false)
+    },
+    after: () => {
+      sign_in_box.css('display', 'none');
+      sign_in_fieldset.attr('disabled', false)
+    },
+  },
+  {  // State 3: Activity Select
     before: () => {
       activity_select_box.css('display', 'block');
       activity_select_fieldset.attr('disabled', true)
@@ -48,7 +64,7 @@ const STATES = [
       activity_select_fieldset.attr('disabled', false)
     },
   },
-  {  // State 3: Activity Edit
+  {  // State 4: Activity Edit
     before: () => {
       activity_edit_box.css('display', 'block');
       activity_edit_fieldset.attr('disabled', true)
@@ -62,7 +78,7 @@ const STATES = [
       activity_edit_fieldset.attr('disabled', false)
     }
   },
-  {  // State 4: Final box!
+  {  // State 5: Final box!
     before: () => final_box.css('display', 'flex'),  // Not going to happen
     on: () => final_box.css('display', 'flex'),
     after: () => final_box.css('display', 'none')
@@ -115,7 +131,7 @@ start_form.on('submit', event => {
 
   // Try to load all the modules
   Promise.all(module_promises).then(
-    modules => displayActivitySelect(modules, term)
+    modules => displayGoogleSignIn(modules, term)
   ).catch(err => {
     console.log(err);
     new Noty({
@@ -127,6 +143,13 @@ start_form.on('submit', event => {
     goToState(0);
   })
 })
+
+
+function displayGoogleSignIn(modules, term) {
+  goToState(2);
+  window.scrollBy(0, 60);
+  btn_sign_in_continue.on('click', () => displayActivitySelect(modules, term))
+}
 
 
 function displayActivitySelect(modules, term) {
@@ -143,7 +166,7 @@ function displayActivitySelect(modules, term) {
     })
   )
   render(h(ActivitySelect, {modules: new_modules, continue_callback: displayActivityEdit}, null), activity_select_container)
-  goToState(2);
+  goToState(3);
   window.scrollBy(0, 60);
 }
 
@@ -180,7 +203,7 @@ Description: ${activity.description}`,
     return;
   }
   render(h(ActivityEdit, {modules: selected_modules, continue_callback: almostThere}, null), activity_edit_container)
-  goToState(3);
+  goToState(4);
   window.scrollBy(0, 60);
 }
 
@@ -188,7 +211,7 @@ let final_module_list;
 
 function almostThere(modules) {
   final_module_list = modules;
-  goToState(4);
+  goToState(5);
   window.scrollBy(0, 60);
 }
 
@@ -201,17 +224,22 @@ const SCOPES = "https://www.googleapis.com/auth/calendar"
 const select_notif = $('#select-notifications');
 const btn_authorize = $('#btn-authorize');
 const btn_magic = $('#btn-magic');
-const btn_sign_out = $('#btn-sign-out');
+const btn_sign_out_1 = $('#btn-sign-out-1');
+const btn_sign_out_2 = $('#btn-sign-out-2');
 
 function updateGoogleSignInStatus(isSignedIn) {
-  if (!isSignedIn) {
-    btn_authorize.attr('disabled', false);
-    btn_magic.attr('disabled', true);
-    btn_sign_out.attr('disabled', true);
-  } else {
+  if (isSignedIn) {
     btn_authorize.attr('disabled', true);
+    btn_sign_in_continue.attr('disabled', false);
     btn_magic.attr('disabled', false);
-    btn_sign_out.attr('disabled', false);
+    btn_sign_out_1.attr('disabled', false);
+    btn_sign_out_2.attr('disabled', false);
+  } else {
+    btn_authorize.attr('disabled', false);
+    btn_sign_in_continue.attr('disabled', true);
+    btn_magic.attr('disabled', true);
+    btn_sign_out_1.attr('disabled', true);
+    btn_sign_out_2.attr('disabled', true);
   }
 }
 
@@ -220,6 +248,10 @@ function handleGoogleClientLoad() {
 }
 
 setTimeout(handleGoogleClientLoad, 0)
+
+function googleSignOut() {
+  gapi.auth2.getAuthInstance().signOut();
+}
 
 function initGoogleClient() {
   gapi.client.init({
@@ -243,10 +275,9 @@ function initGoogleClient() {
         }).show();
       });
     })
-    btn_magic.on('click', handleMagicClick)
-    btn_sign_out.on('click', () => {
-      gapi.auth2.getAuthInstance().signOut();
-    })
+    btn_magic.on('click', handleMagicClick);
+    btn_sign_out_1.on('click', googleSignOut);
+    btn_sign_out_2.on('click', googleSignOut);
   }).catch(err => {
     console.log(err);
     new Noty({
@@ -333,7 +364,7 @@ function handleMagicClick() {
         type: 'success',
         layout: 'bottomLeft',
         text: 'It worked!!!!',
-        timeout: 2000
+        timeout: 4000
       }).show();
     }).catch(err => {
       console.log(err);
@@ -342,7 +373,7 @@ function handleMagicClick() {
         type: 'error',
         layout: 'bottomLeft',
         text: 'Error creating the events. I would recommend manual deletion of the calendar and trying again.',
-        timeout: 2000
+        timeout: 4000
       }).show();
     })
   }).catch(err => {
@@ -351,7 +382,7 @@ function handleMagicClick() {
       type: 'error',
       layout: 'bottomLeft',
       text: 'Some problem creating the calendar :S',
-      timeout: 2000
+      timeout: 4000
     }).show();
     btn_magic.attr('disabled', false);
   })

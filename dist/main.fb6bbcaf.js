@@ -22194,13 +22194,14 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 
-// TODO: Remove "D/" from location
-// TODO: Better timings using start + duration
 // Relevant elements
 var start_fieldset = $('#start-fieldset');
 var start_form = $('#start-form');
 var module_select = $('#module-select');
 var loading_box = $('#loading-box');
+var sign_in_box = $('#sign-in-box');
+var sign_in_fieldset = $('#sign-in-fieldset');
+var btn_sign_in_continue = $('#btn-sign-in-continue');
 var activity_select_box = $('#activity-select-box');
 var activity_select_container = document.getElementById('activity-select-container');
 var activity_select_fieldset = $('#activity-select-fieldset');
@@ -22208,6 +22209,7 @@ var activity_edit_box = $('#activity-edit-box');
 var activity_edit_container = document.getElementById('activity-edit-container');
 var activity_edit_fieldset = $('#activity-edit-fieldset');
 var final_box = $('#final-box'); // State transition code
+// How to display when you are before, on or after the current state
 
 var STATES = [{
   // State 0: Start Form
@@ -22232,7 +22234,21 @@ var STATES = [{
     return loading_box.css('display', 'none');
   }
 }, {
-  // State 2: Activity Select
+  // State 2: Google sign in
+  before: function before() {
+    sign_in_box.css('display', 'flex');
+    sign_in_fieldset.attr('disabled', true);
+  },
+  on: function on() {
+    sign_in_box.css('display', 'flex');
+    sign_in_fieldset.attr('disabled', false);
+  },
+  after: function after() {
+    sign_in_box.css('display', 'none');
+    sign_in_fieldset.attr('disabled', false);
+  }
+}, {
+  // State 3: Activity Select
   before: function before() {
     activity_select_box.css('display', 'block');
     activity_select_fieldset.attr('disabled', true);
@@ -22246,7 +22262,7 @@ var STATES = [{
     activity_select_fieldset.attr('disabled', false);
   }
 }, {
-  // State 3: Activity Edit
+  // State 4: Activity Edit
   before: function before() {
     activity_edit_box.css('display', 'block');
     activity_edit_fieldset.attr('disabled', true);
@@ -22260,7 +22276,7 @@ var STATES = [{
     activity_edit_fieldset.attr('disabled', false);
   }
 }, {
-  // State 4: Final box!
+  // State 5: Final box!
   before: function before() {
     return final_box.css('display', 'flex');
   },
@@ -22325,7 +22341,7 @@ start_form.on('submit', function (event) {
   goToState(1); // Try to load all the modules
 
   Promise.all(module_promises).then(function (modules) {
-    return displayActivitySelect(modules, term);
+    return displayGoogleSignIn(modules, term);
   }).catch(function (err) {
     console.log(err);
     new _noty.default({
@@ -22337,6 +22353,14 @@ start_form.on('submit', function (event) {
     goToState(0);
   });
 });
+
+function displayGoogleSignIn(modules, term) {
+  goToState(2);
+  window.scrollBy(0, 60);
+  btn_sign_in_continue.on('click', function () {
+    return displayActivitySelect(modules, term);
+  });
+}
 
 function displayActivitySelect(modules, term) {
   var new_modules = modules.map(function (_ref2) {
@@ -22358,7 +22382,7 @@ function displayActivitySelect(modules, term) {
     modules: new_modules,
     continue_callback: displayActivityEdit
   }, null), activity_select_container);
-  goToState(2);
+  goToState(3);
   window.scrollBy(0, 60);
 }
 
@@ -22400,7 +22424,7 @@ function displayActivityEdit(selected_modules) {
     modules: selected_modules,
     continue_callback: almostThere
   }, null), activity_edit_container);
-  goToState(3);
+  goToState(4);
   window.scrollBy(0, 60);
 }
 
@@ -22408,7 +22432,7 @@ var final_module_list;
 
 function almostThere(modules) {
   final_module_list = modules;
-  goToState(4);
+  goToState(5);
   window.scrollBy(0, 60);
 } // Google shit
 
@@ -22420,17 +22444,22 @@ var SCOPES = "https://www.googleapis.com/auth/calendar";
 var select_notif = $('#select-notifications');
 var btn_authorize = $('#btn-authorize');
 var btn_magic = $('#btn-magic');
-var btn_sign_out = $('#btn-sign-out');
+var btn_sign_out_1 = $('#btn-sign-out-1');
+var btn_sign_out_2 = $('#btn-sign-out-2');
 
 function updateGoogleSignInStatus(isSignedIn) {
-  if (!isSignedIn) {
-    btn_authorize.attr('disabled', false);
-    btn_magic.attr('disabled', true);
-    btn_sign_out.attr('disabled', true);
-  } else {
+  if (isSignedIn) {
     btn_authorize.attr('disabled', true);
+    btn_sign_in_continue.attr('disabled', false);
     btn_magic.attr('disabled', false);
-    btn_sign_out.attr('disabled', false);
+    btn_sign_out_1.attr('disabled', false);
+    btn_sign_out_2.attr('disabled', false);
+  } else {
+    btn_authorize.attr('disabled', false);
+    btn_sign_in_continue.attr('disabled', true);
+    btn_magic.attr('disabled', true);
+    btn_sign_out_1.attr('disabled', true);
+    btn_sign_out_2.attr('disabled', true);
   }
 }
 
@@ -22439,6 +22468,10 @@ function handleGoogleClientLoad() {
 }
 
 setTimeout(handleGoogleClientLoad, 0);
+
+function googleSignOut() {
+  gapi.auth2.getAuthInstance().signOut();
+}
 
 function initGoogleClient() {
   gapi.client.init({
@@ -22462,9 +22495,8 @@ function initGoogleClient() {
       });
     });
     btn_magic.on('click', handleMagicClick);
-    btn_sign_out.on('click', function () {
-      gapi.auth2.getAuthInstance().signOut();
-    });
+    btn_sign_out_1.on('click', googleSignOut);
+    btn_sign_out_2.on('click', googleSignOut);
   }).catch(function (err) {
     console.log(err);
     new _noty.default({
@@ -22547,7 +22579,7 @@ function handleMagicClick() {
         type: 'success',
         layout: 'bottomLeft',
         text: 'It worked!!!!',
-        timeout: 2000
+        timeout: 4000
       }).show();
     }).catch(function (err) {
       console.log(err);
@@ -22556,7 +22588,7 @@ function handleMagicClick() {
         type: 'error',
         layout: 'bottomLeft',
         text: 'Error creating the events. I would recommend manual deletion of the calendar and trying again.',
-        timeout: 2000
+        timeout: 4000
       }).show();
     });
   }).catch(function (err) {
@@ -22565,7 +22597,7 @@ function handleMagicClick() {
       type: 'error',
       layout: 'bottomLeft',
       text: 'Some problem creating the calendar :S',
-      timeout: 2000
+      timeout: 4000
     }).show();
     btn_magic.attr('disabled', false);
   });
@@ -22598,7 +22630,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63074" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50923" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
