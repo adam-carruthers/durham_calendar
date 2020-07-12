@@ -145,8 +145,12 @@ start_form.on('submit', event => {
   })
 })
 
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 function displayGoogleSignIn(modules, term) {
+  input_cal_name.val(`${capitalizeFirstLetter(term)} Timetable`)
   goToState(2);
   window.scrollBy(0, 60);
   btn_sign_in_continue.on('click', () => displayActivitySelect(modules, term))
@@ -216,6 +220,7 @@ const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v
 const SCOPES = "https://www.googleapis.com/auth/calendar"
 
 const select_notif = $('#select-notifications');
+const input_cal_name = $('#input-cal-name');
 const btn_authorize = $('#btn-authorize');
 const btn_magic = $('#btn-magic');
 const btn_sign_out_1 = $('#btn-sign-out-1');
@@ -303,7 +308,7 @@ function handleMagicClick() {
 
   let generatedCalendar;
   gapi.client.calendar.calendars.insert({
-    summary: 'Durham Timetable',
+    summary: input_cal_name.val(),
     timeZone: 'Europe/London'
   }).then(json => {
     generatedCalendar = json.result;

@@ -138,6 +138,10 @@
       Please double check the information below using <a class="font-italic" href="https://timetable.dur.ac.uk/module.htm">https://timetable.dur.ac.uk/module.htm</a>.
       Use the list report style and be warned that weeks are numbered differently on this website to there (but dates match).
     </p>
+    <p class="text-white">
+      When done hit continue at the bottom. If you trust that everything is correct you can
+      <button type="button" class="btn btn-primary" onclick="window.scrollBy(0, 500000)">Scroll to bottom</button>
+    </p>
     <fieldset id="activity-edit-fieldset">
       <div id="activity-edit-container"></div>
     </fieldset>
@@ -162,12 +166,18 @@
         <option value="10">10 minutes before</option>
       </select>
     </div>
+    <div class="input-group input-group-lg mb-2">
+      <div class="input-group-prepend">
+        <span class="input-group-text">Calendar name</span>
+      </div>
+      <input id="input-cal-name" type="text" class="form-control form-control-lg" value="Durham Calendar" />
+    </div>
     <button type="button" class="btn btn-light btn-lg mb-5" id="btn-magic" disabled>Magic!</button>
     <button type="button" class="btn btn-light mb-2" id="btn-sign-out-2" disabled>Sign Out of Google</button>
   </div>
   <div class="footer small text-center text-muted mt-2">
     This website was made by a student by scraping data from the Durham timetable website.
-    Not everything here is guarenteed to be accurate!
+    Not everything here is guaranteed to be accurate!
     Any issues please email
     <a href="mailto:adam.j.carruthers@durham.ac.uk">adam.j.carruthers@durham.ac.uk</a>.
     Many thanks to the friends who helped me test the website!
