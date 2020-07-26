@@ -95,7 +95,7 @@ function goToState(state_index){
     state => state.after()
   )
 }
-window.goToState = goToState;
+
 // Code that runs on page load
 // Add the modules to the select
 Object.values(MODULES).forEach(({code, title}) => (
@@ -152,7 +152,7 @@ function capitalizeFirstLetter(string) {
 function displayGoogleSignIn(modules, term) {
   input_cal_name.val(`${capitalizeFirstLetter(term)} Timetable`)
   goToState(2);
-  window.scrollBy(0, 60);
+  window.scrollBy(0, 120);
   btn_sign_in_continue.on('click', () => displayActivitySelect(modules, term))
 }
 
@@ -172,7 +172,7 @@ function displayActivitySelect(modules, term) {
   )
   render(h(ActivitySelect, {modules: new_modules, continue_callback: displayActivityEdit}, null), activity_select_container)
   goToState(3);
-  window.scrollBy(0, 60);
+  window.scrollBy(0, 120);
 }
 
 
@@ -202,7 +202,7 @@ Description: ${activity.description}`,
   )
   render(h(ActivityEdit, {modules: selected_modules, continue_callback: almostThere, event_colors}, null), activity_edit_container)
   goToState(4);
-  window.scrollBy(0, 60);
+  window.scrollBy(0, 120);
 }
 
 let final_module_list;
@@ -210,7 +210,7 @@ let final_module_list;
 function almostThere(modules) {
   final_module_list = modules;
   goToState(5);
-  window.scrollBy(0, 60);
+  window.scrollBy(0, 120);
 }
 
 // Google shit
