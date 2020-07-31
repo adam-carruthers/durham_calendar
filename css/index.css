@@ -53,7 +53,8 @@ fieldset:disabled .show-on-disabled {
 #sign-in-box,
 #activity-select-box,
 #activity-edit-box,
-#final-box {
+#final-box-google,
+#final-box-non-google {
   display: none;
 }
 

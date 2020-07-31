@@ -4,9 +4,10 @@ import ActivitySelect from './activity_select';
 import ActivityEdit from "./activity_edit";
 import {h, render} from 'preact';
 import {DateTime} from 'luxon';
-import {act} from "preact/test-utils";
+import {generateICSString} from './ics';
 
 // TODO: Replace JSX classname formatting stuff with the npm classnames library
+// TODO: Add set calendar color
 
 // Relevant elements
 const start_fieldset = $('#start-fieldset');
@@ -14,15 +15,17 @@ const start_form = $('#start-form');
 const module_select = $('#module-select');
 const loading_box = $('#loading-box');
 const sign_in_box = $('#sign-in-box');
-const sign_in_fieldset = $('#sign-in-fieldset');
+const sign_in_fieldset = $('.sign-in-fieldset');
 const btn_sign_in_continue = $('#btn-sign-in-continue');
+const btn_no_sign_in_continue = $('#btn-no-sign-in-continue');
 const activity_select_box = $('#activity-select-box');
 const activity_select_container = document.getElementById('activity-select-container');
 const activity_select_fieldset = $('#activity-select-fieldset');
 const activity_edit_box = $('#activity-edit-box');
 const activity_edit_container = document.getElementById('activity-edit-container');
 const activity_edit_fieldset = $('#activity-edit-fieldset');
-const final_box = $('#final-box');
+const final_box_google = $('#final-box-google');
+const final_box_non_google = $('#final-box-non-google');
 
 // State transition code
 // How to display when you are before, on or after the current state
@@ -39,11 +42,11 @@ const STATES = [
   },
   {  // State 2: Google sign in
     before: () => {
-      sign_in_box.css('display', 'flex');
+      sign_in_box.css('display', 'block');
       sign_in_fieldset.attr('disabled', true)
     },
     on: () => {
-      sign_in_box.css('display', 'flex');
+      sign_in_box.css('display', 'block');
       sign_in_fieldset.attr('disabled', false)
     },
     after: () => {
@@ -80,9 +83,28 @@ const STATES = [
     }
   },
   {  // State 5: Final box!
-    before: () => final_box.css('display', 'flex'),  // Not going to happen
-    on: () => final_box.css('display', 'flex'),
-    after: () => final_box.css('display', 'none')
+    before: () => {  // Not going to happen but whatever
+      if(use_google) {
+        final_box_google.css('display', 'flex');
+        final_box_non_google.css('display', 'none');
+      } else {
+        final_box_google.css('display', 'none');
+        final_box_non_google.css('display', 'flex');
+      }
+    },
+    on: () => {
+      if(use_google) {
+        final_box_google.css('display', 'flex');
+        final_box_non_google.css('display', 'none');
+      } else {
+        final_box_google.css('display', 'none');
+        final_box_non_google.css('display', 'flex');
+      }
+    },
+    after: () => {
+      final_box_google.css('display', 'none');
+      final_box_non_google.css('display', 'none')
+    }
   }
 ]
 function goToState(state_index){
@@ -154,10 +176,14 @@ function displayGoogleSignIn(modules, term) {
   goToState(2);
   window.scrollBy(0, 120);
   btn_sign_in_continue.on('click', () => displayActivitySelect(modules, term))
+  btn_no_sign_in_continue.on('click', () => displayActivitySelect(modules, term))
 }
 
+let use_google = null;
 
-function displayActivitySelect(modules, term) {
+function displayActivitySelect(modules, term, google_chosen) {
+  use_google = google_chosen;
+
   const new_modules = modules.map(
     ({code, title, ...module}) => ({
       code,
@@ -200,7 +226,7 @@ Description: ${activity.description}`,
       )
     })
   )
-  render(h(ActivityEdit, {modules: selected_modules, continue_callback: almostThere, event_colors}, null), activity_edit_container)
+  render(h(ActivityEdit, {modules: selected_modules, continue_callback: almostThere, event_colors, use_google}, null), activity_edit_container)
   goToState(4);
   window.scrollBy(0, 120);
 }
@@ -212,6 +238,25 @@ function almostThere(modules) {
   goToState(5);
   window.scrollBy(0, 120);
 }
+
+function save(filename, data) {
+  var blob = new Blob([data], {type: 'text/calendar'});
+  if(window.navigator.msSaveOrOpenBlob) {
+    window.navigator.msSaveBlob(blob, filename);
+  }
+  else{
+    var elem = window.document.createElement('a');
+    elem.href = window.URL.createObjectURL(blob);
+    elem.download = filename;
+    document.body.appendChild(elem);
+    elem.click();
+    document.body.removeChild(elem);
+  }
+}
+
+$('#btn-non-magic').on('click', () => {
+  save('Durham Calendar.ics', generateICSString(final_module_list));
+})
 
 // Google shit
 const CLIENT_ID = '441729039045-0lrc1sftdpb99imsgffs3r0962qd9r5v.apps.googleusercontent.com';

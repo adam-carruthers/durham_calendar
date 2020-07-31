@@ -19,7 +19,7 @@ class EditableActivity extends Component {
   }
 
   render({id, title, room, cal_description, code_info, weeks, max_week, start, end, timings,
-           change_property, delete_activity, event_colors, color},
+           change_property, delete_activity, event_colors, color, use_google},
          {delete_sure, edit_timings, unique_id, day_object, color_dropdown}) {
     return (
       <div className="rounded-lg bg-light overflow-hidden mb-3 pt-2 pb-2">
@@ -115,10 +115,13 @@ class EditableActivity extends Component {
           ) : (
             <button className="btn btn-danger mr-3 mb-2" onClick={() => this.setPropertyBool('delete_sure', true)}>Delete Activity</button>
           )}
-          <button className={"mb-2 btn"+(color ? "" : " btn-dark")} style={color && {'background-color': color.background}}
-                  onClick={() => this.setPropertyBool('color_dropdown', true)}>
-            Set color (currently {color ? "this" : "not set"})
-          </button>
+          {use_google &&
+            <button className={"mb-2 btn"+(color ? "" : " btn-dark")}
+                    style={color && {'background-color': color.background}}
+                    onClick={() => this.setPropertyBool('color_dropdown', true)}>
+              Set color (currently {color ? "this" : "not set"})
+            </button>
+          }
         </div>
         {color_dropdown && (
           <div className="d-flex flex-wrap pl-3 pr-3 pt-2">
@@ -244,7 +247,7 @@ export default class ActivityEdit extends Component {
       )}))
   }
 
-  render({event_colors}, {modules, max_week}) {
+  render({event_colors, use_google}, {modules, max_week}) {
     return (
       <div className="mb-5">
         {modules.map(
@@ -260,22 +263,26 @@ export default class ActivityEdit extends Component {
                 Set color of all activities (e.g. lectures, tutorials, seminars) in this module at once:
                 <div className="d-flex flex-wrap pt-2">
                   {
-                    Object.entries(event_colors).map(([color_id, ev_color]) => (
-                      <div className="activity-color-pick rounded-circle mr-2 mb-2"
-                           style={{'background-color': ev_color.background}}
-                           onClick={() => this.change_color_of_module(code, {
-                             color_id: color_id,
-                             background: ev_color.background,
-                             foreground: ev_color.foreground
-                           })} />
-                    ))
+                    use_google ? (
+                      Object.entries(event_colors).map(([color_id, ev_color]) => (
+                        <div className="activity-color-pick rounded-circle mr-2 mb-2"
+                             style={{'background-color': ev_color.background}}
+                             onClick={() => this.change_color_of_module(code, {
+                               color_id: color_id,
+                               background: ev_color.background,
+                               foreground: ev_color.foreground
+                             })} />
+                      ))
+                    ) : (
+                      "Colors only available if you use Sign In with Google"
+                    )
                   }
                 </div>
               </div>
               {activities.map(
                 activity => (
                   <EditableActivity key={activity.id} max_week={max_week} module_code={code} event_colors={event_colors}
-                                    change_property={(property, new_value) =>
+                                    use_google={use_google} change_property={(property, new_value) =>
                                       this.change_property(code, activity.id, property, new_value)}
                                     delete_activity={() => this.delete_activity(code, activity.id)}
                                     {...activity} />

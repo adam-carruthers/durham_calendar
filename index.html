@@ -32,11 +32,13 @@
 <body>
 
 <div class="container d-flex flex-column justify-content-center">
+
+
   <div id="start-box" class="text-center text-white mt-4 mb-5">
     <h1>Timetable to calendar</h1>
-    <p>
+    <p class="lead">
       Load your modules from the Durham website, then add it to your Google Calendar!
-      First select the modules you're doing and which term you want to add.
+      First select the modules you're doing and the term to add.
     </p>
     <p class="small">
       This is a new website, things might be buggy. If you're having issues please email me at
@@ -85,6 +87,7 @@
     </form>
   </div>
 
+
   <div id="loading-box" class="bg-light rounded-lg p-4 mb-5">
     <h4 class="mb-0">Loading modules...</h4>
     <div class="spinner-border ml-auto" role="status">
@@ -92,29 +95,49 @@
     </div>
   </div>
 
-  <div id="path-box" class="text-center mb-5 mt-5">
 
+  <div id="sign-in-box" class="text-light mb-5 mt-5">
+    <h2 class="d-block d-md-none mb-4">Choose one option from the two below:</h2>
+    <div class="row">
+      <div class="col-sm d-flex flex-column border-right mb-2">
+        <h3>Choose Google log in...</h3>
+        <p>
+          Choose this option if you want your calendar to automatically be added to Google calendar.
+          It requires logging into Google and granting this website edit permissions.
+          We <b>do not store or read</b> your data, and we ask for <b>as few permissions</b> as possible.
+        </p>
+        <button type="button" class="btn btn-light btn-lg mb-2" id="btn-authorize" disabled>
+          <img class="mr-1 mb-1" src="google-logo.png"/>
+          Login to Google
+        </button>
+        <button type="button" class="btn btn-light mb-2" id="btn-sign-out-1" disabled>Sign Out of Google</button>
+        <div class="mt-2">
+          <small class="text-white">When you're signed in</small><br>
+          <fieldset class="sign-in-fieldset">
+            <button type="button" class="btn btn-primary" id="btn-sign-in-continue" disabled>Continue with Google</button>
+          </fieldset>
+        </div>
+      </div>
+
+      <div class="col-sm mb-2">
+        <h3>Choose calendar file...</h3>
+        <p>
+          Choose this option if you do not want to log into Google.
+          Logging into Google is safe but this option is for those who remain uncomfortable with granting permissions.
+          This option also works for other calendars like Microsoft Outlook.
+          Using this option creates a calendar file you can import into most major calendars.
+          Setting event color is not possible with this option.
+        </p>
+        <div class="mt-2">
+          <small class="text-white">If you decide to continue this way</small><br>
+          <fieldset class="sign-in-fieldset">
+            <button type="button" class="btn btn-primary" id="btn-no-sign-in-continue">Continue without Google</button>
+          </fieldset>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div id="sign-in-box" class="flex-column text-center mb-5 mt-5">
-    <button type="button" class="btn btn-light btn-lg mb-2" id="btn-authorize" disabled>
-      <img class="mr-1 mb-1" src="google-logo.png" />
-      Login to Google
-    </button>
-    <button type="button" class="btn btn-light mb-2" id="btn-sign-out-1" disabled>Sign Out of Google</button>
-    <div class="small text-light mb-2">
-      You will be asked for permissions. These are necessary to be able to add the timetable to your calendar.
-      But don't worry! We do not store any of your data.
-      Why do we need your email and profile picture?
-      Because Google automatically gives us access to this information, there is no way for us to turn this off!
-    </div>
-    <div class="mt-2">
-      <small class="text-white">When you're signed in</small><br>
-      <fieldset id="sign-in-fieldset">
-        <button type="button" class="btn btn-primary" id="btn-sign-in-continue" disabled>Continue</button>
-      </fieldset>
-    </div>
-  </div>
 
   <div id="activity-select-box" class="mb-5">
     <h3 class="text-white">Activity Selector</h3>
@@ -130,6 +153,7 @@
       <div id="activity-select-container"></div>
     </fieldset>
   </div>
+
 
   <div id="activity-edit-box" class="mb-5">
     <h3 class="text-white">Activity Editor</h3>
@@ -150,15 +174,16 @@
     </fieldset>
   </div>
 
-  <div id="final-box" class="flex-column text-center">
-    <h2 class="text-white">Almost there...</h2>
-    <p class="text-white">
+
+  <div id="final-box-google" class="flex-column text-center text-white">
+    <h2>Almost there...</h2>
+    <p>
       The created events will be in a special separate calendar.
       You can edit notifications, calendar color and many other options in calendar settings on the Google Calendar
       website afterwards.
       The settings are at <a class="font-italic" href="https://calendar.google.com/calendar/r/settings">https://calendar.google.com/calendar/r/settings</a>.
     </p>
-    <div class="input-group input-group-lg mb-2">
+    <div class="input-group input-group-lg mb-2 text-body">
       <div class="input-group-prepend">
         <span class="input-group-text">Notifications</span>
       </div>
@@ -169,7 +194,7 @@
         <option value="10">10 minutes before</option>
       </select>
     </div>
-    <div class="input-group input-group-lg mb-2">
+    <div class="input-group input-group-lg mb-2 text-body">
       <div class="input-group-prepend">
         <span class="input-group-text">Calendar name</span>
       </div>
@@ -178,6 +203,20 @@
     <button type="button" class="btn btn-light btn-lg mb-5" id="btn-magic" disabled>Magic!</button>
     <button type="button" class="btn btn-light mb-2" id="btn-sign-out-2" disabled>Sign Out of Google</button>
   </div>
+
+
+  <div id="final-box-non-google" class="flex-column text-center text-white">
+    <h2>Almost there...</h2>
+    <p>
+      When you hit the button below you will download a calendar file.
+      You can then upload it to whatever calendar software you use, how to do this varies by calendar.
+      The instructions for uploading the file to Google Calendar are here:
+      <a href="https://support.google.com/a/users/answer/37118">https://support.google.com/a/users/answer/37118</a>.
+    </p>
+    <button type="button" class="btn btn-light btn-lg mb-5" id="btn-non-magic">Magic!</button>
+  </div>
+
+
   <div class="footer small text-center text-muted mt-2">
     This website was made by a student by scraping data from the Durham timetable website.
     Not everything here is guaranteed to be accurate!
