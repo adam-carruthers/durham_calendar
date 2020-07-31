@@ -175,8 +175,8 @@ function displayGoogleSignIn(modules, term) {
   input_cal_name.val(`${capitalizeFirstLetter(term)} Timetable`)
   goToState(2);
   window.scrollBy(0, 120);
-  btn_sign_in_continue.on('click', () => displayActivitySelect(modules, term))
-  btn_no_sign_in_continue.on('click', () => displayActivitySelect(modules, term))
+  btn_sign_in_continue.on('click', () => displayActivitySelect(modules, term, true))
+  btn_no_sign_in_continue.on('click', () => displayActivitySelect(modules, term, false))
 }
 
 let use_google = null;
