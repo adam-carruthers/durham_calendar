@@ -5,8 +5,8 @@
   "license": "MIT",
   "author": "Adam Carruthers (goodyguts)",
   "scripts": {
-    "build": "parcel build index.html --public-url ./ --out-dir build",
-    "dev": "parcel index.html --open",
+    "build": "parcel build index.html privacy_policy.html --public-url ./ --out-dir build",
+    "dev": "parcel index.html privacy_policy.html --open",
     "start": "npm run build && npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
