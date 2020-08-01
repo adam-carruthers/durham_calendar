@@ -16,6 +16,8 @@
   "dependencies": {
     "luxon": "^1.24.1",
     "noty": "^3.2.0-beta",
-    "preact": "^10.4.4"
+    "preact": "^10.4.6",
+    "elliptic": ">=6.5.3",
+    "lodash": ">=4.17.19"
   }
 }
