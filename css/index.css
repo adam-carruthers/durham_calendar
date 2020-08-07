@@ -22,6 +22,17 @@ body {
   max-width: 42em;
 }
 
+#title-logo-container {
+  width: 6em;
+  box-shadow: 0 0 21px 0 rgba(255,255,255,0.75);
+}
+
+#title-logo {
+  width: 6em;
+  height: 6em;
+  z-index: -1;
+}
+
 #start-box .search-input:disabled {
   background-color: #aaa;
 }
