@@ -2,6 +2,7 @@ a,
 a:focus,
 a:hover {
   color: #fff;
+  text-decoration: underline;
 }
 
 html,
@@ -24,12 +25,12 @@ body {
 
 #title-logo-container {
   width: 6em;
+  max-width: 20vw;
   box-shadow: 0 0 21px 0 rgba(255,255,255,0.75);
 }
 
 #title-logo {
-  width: 6em;
-  height: 6em;
+  width: 100%;
   z-index: -1;
 }
 

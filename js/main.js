@@ -343,7 +343,7 @@ function initGoogleClient() {
     new Noty({
       type: 'error',
       layout: 'bottomLeft',
-      text: 'Google magic failed. Please refresh the page.'
+      text: 'Google magic failed. Google Log In won\'t work.'
     }).show();
   })
 }
