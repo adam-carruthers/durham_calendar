@@ -1,3 +1,5 @@
+The license below is for HTML5 boilerplate, not Durham Calendar.
+
 Copyright (c) HTML5 Boilerplate
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
