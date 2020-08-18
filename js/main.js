@@ -118,10 +118,28 @@ function goToState(state_index){
   )
 }
 
+let previouslySelected = [];
+try {
+  previouslySelected = JSON.parse(window.localStorage.getItem('selectedModuleCodes'));
+  if (!Array.isArray(previouslySelected))
+    previouslySelected = [];
+  if (previouslySelected.length > 0)
+    new Noty({
+      type: 'info',
+      text: "You had previously selected modules, we selected them again for you.",
+      layout: "bottomLeft",
+      timeout: 4000
+    }).show();
+} catch (error) {
+
+}
 // Code that runs on page load
 // Add the modules to the select
 Object.values(MODULES).forEach(({code, title}) => (
-  module_select.append($('<option>', {value: code, text: code + (title ? ' - '+title : '')}))
+  module_select.append($('<option>', {
+    value: code, text: code + (title ? ' - '+title : ''),
+    selected: previouslySelected.indexOf(code) !== -1
+  }))
 ))
 module_select.multi({
   non_selected_header: 'Modules',
@@ -135,6 +153,7 @@ start_form.on('submit', event => {
   event.preventDefault();
   const term = $("input[name='check-term']:checked").val();
   const module_codes = $(module_select).val();
+  window.localStorage.setItem('selectedModuleCodes', JSON.stringify(module_codes));
 
   if (!module_codes.length) {
     new Noty({
