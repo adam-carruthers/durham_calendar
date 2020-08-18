@@ -228,7 +228,7 @@ function displayActivityEdit(selected_modules) {
       activities: module.activities.map(
         activity => ({
           ...activity,
-          title: `${activity.type} ${activity.description || module.title || (!activity.type.includes(module.code) ? '' : module.code)}`,
+          title: `${activity.type} ${activity.description.trim() || module.title.trim() || (!activity.type.includes(module.code) ? '' : module.code)}`,
           cal_description:
 `Staff: ${activity.staff}
 Planned size: ${activity.planned_size}
@@ -245,6 +245,7 @@ Description: ${activity.description}`,
       )
     })
   )
+  console.log(selected_modules)
   render(h(ActivityEdit, {modules: selected_modules, continue_callback: almostThere, event_colors, use_google}, null), activity_edit_container)
   goToState(4);
   window.scrollBy(0, 120);

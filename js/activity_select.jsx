@@ -23,7 +23,7 @@ class Activity extends Component {
               <small className="text-muted">{code_info}</small>
             )}
           </div>
-          <div className={"activity-select-toggle p-3 act-" + (selected?"selected":"not-selected")} onClick={() => toggle_select()}>
+          <div className={"activity-select-toggle flex-shrink-0 p-3 act-" + (selected?"selected":"not-selected")} onClick={() => toggle_select()}>
             {selected ? (<span>Selected</span>) : ("Unselected")}
           </div>
           <div className="activity-select-dropdown p-3" onClick={() => this.toggleDropdown()}>
@@ -102,7 +102,7 @@ class Activity extends Component {
             </div>
             <div className="row m-0 pt-2 pb-2">
               <div className="col-sm-3 text-muted">
-                Size:
+                Class Size:
               </div>
               <div className="col-sm-9">
                 {planned_size}
