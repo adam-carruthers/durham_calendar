@@ -142,3 +142,14 @@ fieldset:disabled .show-on-disabled {
   height: 2em;
   cursor: pointer;
 }
+
+.btn-fb-share {
+  text-decoration: none;
+}
+
+.btn-fb-share img {
+  height: 1.5em;
+  width: 1.5em;
+  margin-bottom: 2px;
+  margin-right: 4px;
+}
