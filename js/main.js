@@ -8,6 +8,10 @@ import {generateICSString} from './ics';
 
 // TODO: Replace JSX classname formatting stuff with the npm classnames library
 // TODO: Add set calendar color
+// TODO: Add FAQs section
+// TODO: Add FB messenger warning
+// TODO: Use better scrolling function
+// TODO: Add thing that tells people to scroll
 
 // Relevant elements
 const start_fieldset = $('#start-fieldset');
@@ -377,12 +381,6 @@ function handleMagicClick() {
     timeZone: 'Europe/London'
   }).then(json => {
     generatedCalendar = json.result;
-    new Noty({
-      type: 'success',
-      layout: 'bottomLeft',
-      text: 'New calendar successfully created!',
-      timeout: 4000
-    }).show();
 
     // Deal with setting notifications
     if(select_notif.val() !== 'none'){
@@ -394,13 +392,6 @@ function handleMagicClick() {
             minutes: parseInt(select_notif.val())
           }
         ]
-      }).then(json => {
-        new Noty({
-          type: 'success',
-          layout: 'bottomLeft',
-          text: 'Sucessfully changed the notification settings!',
-          timeout: 4000
-        }).show();
       }).catch(err => {
         console.log(err)
         new Noty({
