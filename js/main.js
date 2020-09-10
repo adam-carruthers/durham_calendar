@@ -13,6 +13,20 @@ import {generateICSString} from './ics';
 // TODO: Use better scrolling function
 // TODO: Add thing that tells people to scroll
 
+// Section to warn if in Facebook app
+function isFacebookApp() {
+  var ua = navigator.userAgent || navigator.vendor || window.opera;
+  return (ua.indexOf("FBAN") > -1) || (ua.indexOf("FBAV") > -1);
+}
+if(isFacebookApp()){
+  $('#fb-warn').css('display', 'block');
+  new Noty({
+    type: 'error',
+    layout: 'bottomLeft',
+    text: 'This website does not work in the Facebook browser! Open in Chrome.'
+  }).show();
+}
+
 // Relevant elements
 const start_fieldset = $('#start-fieldset');
 const start_form = $('#start-form');
