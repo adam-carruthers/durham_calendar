@@ -48,15 +48,17 @@
         </p>
       </div>
     </div>
-    <div class="alert alert-danger d-none" id="fb-warn" role="alert">
+    <div class="alert alert-danger" id="fb-warn" role="alert">
       This website does not work in the Facebook browser! Open it in Chrome (try the top right corner).
     </div>
     <p class="small">
       Welcome to the site homepage!
       This is a new website, things might be buggy. If you're having issues please email me at
       <a href="mailto:adam.j.carruthers@durham.ac.uk">adam.j.carruthers@durham.ac.uk</a>.
-      This website is only tested on Google Chrome. Other browsers aren't guaranteed to work.
+      This website is tested on Google Chrome.
       This website doesn't work in incognito mode.
+      Sometimes when you hit the "Let's Go" button nothing happens.
+      I don't know why, I would recommend that you try the website on a different device like your phone.
       Durham Calendar is a single page application wholly for the purpose of adding your timetable to your calendar.
       It is run by a single student who you can contact at the email above.
     </p>
@@ -105,7 +107,7 @@
         <div class="d-flex justify-content-center mt-3">
           <input type="submit" class="btn btn-primary btn-lg" value="Let's go!">
         </div>
-        <small class="text-muted show-on-disabled">To restart the process, please refresh the page.</small>
+        <div class="show-on-disabled">Scroll down! To restart the process, please refresh the page.</div>
       </fieldset>
     </form>
   </div>
@@ -139,6 +141,7 @@
           <small class="text-white">When you're signed in</small><br>
           <fieldset class="sign-in-fieldset">
             <button type="button" class="btn btn-primary" id="btn-sign-in-continue" disabled>Continue with Google</button>
+            <div class="show-on-disabled">Scroll down!</div>
           </fieldset>
         </div>
       </div>
@@ -156,6 +159,7 @@
           <small class="text-white">If you decide to continue this way</small><br>
           <fieldset class="sign-in-fieldset">
             <button type="button" class="btn btn-primary" id="btn-no-sign-in-continue">Continue without Google</button>
+            <div class="show-on-disabled">Go on, scroll!</div>
           </fieldset>
         </div>
       </div>
@@ -175,6 +179,7 @@
     </p>
     <fieldset id="activity-select-fieldset">
       <div id="activity-select-container"></div>
+      <div class="show-on-disabled">Scroll down!</div>
     </fieldset>
   </div>
 
@@ -195,6 +200,7 @@
     </p>
     <fieldset id="activity-edit-fieldset">
       <div id="activity-edit-container"></div>
+      <div class="show-on-disabled">Scroll down!</div>
     </fieldset>
   </div>
 
@@ -206,6 +212,7 @@
       You can edit notifications, calendar color and many other options in calendar settings on the Google Calendar
       website afterwards.
       The settings are at <a class="font-italic" href="https://calendar.google.com/calendar/r/settings">https://calendar.google.com/calendar/r/settings</a>.
+      You will need to refresh your calendar page after it is done to see the changes.
     </p>
     <p>
       To upload other terms, refresh the page when you're done.

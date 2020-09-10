@@ -8,10 +8,6 @@ import {generateICSString} from './ics';
 
 // TODO: Replace JSX classname formatting stuff with the npm classnames library
 // TODO: Add set calendar color
-// TODO: Add FAQs section
-// TODO: Add FB messenger warning
-// TODO: Use better scrolling function
-// TODO: Add thing that tells people to scroll
 
 // Section to warn if in Facebook app
 function isFacebookApp() {

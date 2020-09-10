@@ -10,6 +10,10 @@ body {
   background-color: #333;
 }
 
+#fb-warn {
+  display: none;
+}
+
 body {
   display: flex;
 
@@ -58,6 +62,13 @@ fieldset:disabled .bg-light {
 
 fieldset:disabled .show-on-disabled {
   display: block;
+  color: white;
+  background-color: black;
+  padding: 4px;
+  margin: 4px 0 0 0;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: bold;
 }
 
 /* Hide the boxes further down the page until they're needed. */
