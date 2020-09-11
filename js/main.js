@@ -447,7 +447,7 @@ function handleMagicClick() {
         text: 'It worked!!!!',
         timeout: 4000
       }).show();
-    }).catch(err => {
+    }).then().catch(err => {
       console.log(err);
       btn_magic.attr('disabled', false);
       new Noty({
@@ -457,7 +457,7 @@ function handleMagicClick() {
         timeout: 4000
       }).show();
     })
-  }).catch(err => {
+  }).then().catch(err => {
     console.log(err)
     new Noty({
       type: 'error',
