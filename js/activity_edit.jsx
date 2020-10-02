@@ -119,7 +119,7 @@ class EditableActivity extends Component {
             <button className={"mb-2 btn"+(color ? "" : " btn-dark")}
                     style={color && {'background-color': color.background}}
                     onClick={() => this.setPropertyBool('color_dropdown', true)}>
-              Set color (currently {color ? "this" : "not set"})
+              Override color (currently {color ? "this" : "not set"})
             </button>
           }
         </div>
