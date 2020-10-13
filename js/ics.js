@@ -1,4 +1,5 @@
 import {DateTime} from 'luxon';
+import { v4 as uuidv4 } from 'uuid';
 
 function foldLine (line) {
   const parts = []
@@ -25,8 +26,6 @@ function changeTiming(timing_dt) {
   return timing_dt.replace(replace_regex, '').slice(0, 15)
 }
 
-let event_uid = 0;
-
 export function generateICSString(modules) {
   let events = [];
   const timestamp_now = DateTime.utc().set({milliseconds: 0}).toISO({suppressMilliseconds:true, format: 'basic'});
@@ -40,7 +39,7 @@ ${foldLine('SUMMARY:' + formatText(activity.title))}
 DTSTART;TZID=Europe/London:${changeTiming(timing.start.dateTime)}
 DTEND;TZID=Europe/London:${changeTiming(timing.end.dateTime)}
 DTSTAMP:${timestamp_now}
-UID:${event_uid++}@goodyguts.github.io
+${foldLine('UID:' + uuidv4() + '@goodyguts.github.io')}
 CREATED:${timestamp_now}
 ${foldLine('LOCATION:' + formatText(activity.room))}
 ${foldLine('DESCRIPTION:' + formatText(activity.cal_description))}

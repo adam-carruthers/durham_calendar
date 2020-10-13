@@ -269,6 +269,7 @@ let final_module_list;
 
 function almostThere(modules) {
   final_module_list = modules;
+  window.final_module_list = modules;  // Need this to test a theory.
   goToState(5);
   window.scrollBy(0, 120);
 }
@@ -407,7 +408,7 @@ function handleMagicClick() {
         new Noty({
           type: 'error',
           layout: 'bottomLeft',
-          text: 'Some error setting the notification settings, you will have to set it manually.',
+          text: 'Some error setting the notification settings, you will have to set it manually. <a href="mailito:adam.j.carruthers@durham.ac.uk">Email me</a> or <a href="https://www.messenger.com/t/adjcarruthers">message me</a>.',
           timeout: 4000
         }).show();
       })
@@ -453,7 +454,7 @@ function handleMagicClick() {
       new Noty({
         type: 'error',
         layout: 'bottomLeft',
-        text: 'Error creating the events. I would recommend manual deletion of the calendar and trying again.',
+        text: 'Error creating the events. I would recommend manual deletion of the calendar and trying again. <a href="mailito:adam.j.carruthers@durham.ac.uk">Email me</a> or <a href="https://www.messenger.com/t/adjcarruthers">message me</a>.',
         timeout: 4000
       }).show();
     })
@@ -462,7 +463,7 @@ function handleMagicClick() {
     new Noty({
       type: 'error',
       layout: 'bottomLeft',
-      text: 'Some problem creating the calendar :S',
+      text: 'Some problem creating the calendar :S. Try creating the calendar again or <a href="mailito:adam.j.carruthers@durham.ac.uk">email me</a> or <a href="https://www.messenger.com/t/adjcarruthers">message me</a>.',
       timeout: 4000
     }).show();
     btn_magic.attr('disabled', false);
