@@ -442,6 +442,9 @@ function handleMagicClick() {
 
     eventBatch.then(json => {
       console.log(json)
+      Object.values(json.result).forEach(
+        ({status}) => {if (status !== 200) throw new Error('A event was not copied in correctly.')}
+      )
       new Noty({
         type: 'success',
         layout: 'bottomLeft',
