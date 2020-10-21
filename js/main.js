@@ -1,4 +1,3 @@
-import {MODULES} from "./consts";
 import Noty from 'noty';
 import ActivitySelect from './activity_select';
 import ActivityEdit from "./activity_edit";
@@ -147,19 +146,36 @@ try {
 } catch (error) {
 
 }
+
 // Code that runs on page load
 // Add the modules to the select
-Object.values(MODULES).forEach(({code, title}) => (
-  module_select.append($('<option>', {
-    value: code, text: code + (title ? ' - '+title : ''),
-    selected: previouslySelected.indexOf(code) !== -1
-  }))
-))
-module_select.multi({
-  non_selected_header: 'Modules',
-  selected_header: 'Selected Modules',
-  search_placeholder: 'Search Modules... Try MATH1 or ANTH3...'
-});  // Activate multiselect magic
+let MODULES = null;
+fetch('modules_no_activities.json').then(resp => resp.json()).then(
+  json => {
+    MODULES = json;
+    Object.values(MODULES).forEach(({code, title}) => (
+      module_select.append($('<option>', {
+        value: code, text: code + (title ? ' - ' + title : ''),
+        selected: previouslySelected.indexOf(code) !== -1
+      }))
+    ))
+    module_select.multi({
+      non_selected_header: 'Modules',
+      selected_header: 'Selected Modules',
+      search_placeholder: 'Search Modules... Try MATH1 or ANTH3...'
+    });  // Activate multiselect magic
+  }
+).catch(err => {
+    console.log(err)
+    new Noty({
+      type: 'error',
+      layout: 'bottomLeft',
+      text: 'Some problem creating the calendar :S. Try creating the calendar again or <a href="mailito:adam.j.carruthers@durham.ac.uk">email me</a> or <a href="https://www.messenger.com/t/adjcarruthers">message me</a>.',
+      timeout: 4000
+    }).show();
+  }
+)
+
 
 
 // Form callback
