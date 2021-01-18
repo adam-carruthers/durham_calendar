@@ -306,7 +306,8 @@ function save(filename, data) {
 }
 
 $('#btn-non-magic').on('click', () => {
-  save('Durham Calendar.ics', generateICSString(final_module_list));
+  const icalColorChoice = document.querySelector('input[name="ical-category-radio"]:checked').value;
+  save('Durham Calendar.ics', generateICSString(final_module_list, icalColorChoice));
 })
 
 // Google shit

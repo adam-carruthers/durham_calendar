@@ -27,29 +27,35 @@ function changeTiming(timing_dt) {
 }
 
 function getCategory (type) {
-  switch (type.substr(0, 4)) {
-    case 'LECT':
+  switch (type.substr(0, 3)) {
+    case 'LEC':
       return 'Lecture'
-    case 'TUTA':
+    case 'TUT':
       return 'Tutorial'
-    case 'SEMA':
+    case 'SEM':
       return 'Seminar'
-    case 'PROB':
+    case 'PRO':
       return 'Problems Class'
-    case 'PRAC':
+    case 'PRA':
       return 'Practical'
   }
 
-  return ''
+  return 'Other'
 }
 
-export function generateICSString (modules) {
+export function generateICSString (modules, icalColorChoice) {
   let events = [];
   const timestamp_now = DateTime.utc().set({milliseconds: 0}).toISO({suppressMilliseconds: true, format: 'basic'});
   modules.forEach(
     module => module.activities.forEach(
       activity => activity.final_timings.forEach(
         timing => {
+          let categoriesLine = "";
+          if(icalColorChoice === "Activity"){
+            categoriesLine = "\n" + foldLine('CATEGORIES:' + formatText(getCategory(activity.type)));
+          } else if (icalColorChoice === "Module") {
+            categoriesLine = "\n" + foldLine('CATEGORIES:' + formatText(module.code));
+          }
           events.push(
 `BEGIN:VEVENT
 ${foldLine('SUMMARY:' + formatText(activity.title))}
@@ -59,8 +65,7 @@ DTSTAMP:${timestamp_now}
 ${foldLine('UID:' + uuidv4() + '@goodyguts.github.io')}
 CREATED:${timestamp_now}
 ${foldLine('LOCATION:' + formatText(activity.room))}
-${foldLine('DESCRIPTION:' + formatText(activity.cal_description))}
-${foldLine('CATEGORIES:' + formatText(getCategory(activity.type)))}
+${foldLine('DESCRIPTION:' + formatText(activity.cal_description))}${categoriesLine}
 END:VEVENT`
           )
         })));
