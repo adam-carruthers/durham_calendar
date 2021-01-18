@@ -46,8 +46,8 @@ function getCategory (type) {
 }
 
 export function generateICSString (modules) {
-  const events = [];
-  const timestamp_now = DateTime.utc().set({ milliseconds: 0 }).toISO({ suppressMilliseconds: true, format: 'basic' });
+  let events = [];
+  const timestamp_now = DateTime.utc().set({milliseconds: 0}).toISO({suppressMilliseconds: true, format: 'basic'});
   modules.forEach(
     module => module.activities.forEach(
       activity => activity.final_timings.forEach(
