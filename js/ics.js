@@ -26,9 +26,28 @@ function changeTiming(timing_dt) {
   return timing_dt.replace(replace_regex, '').slice(0, 15)
 }
 
-export function generateICSString(modules) {
-  let events = [];
-  const timestamp_now = DateTime.utc().set({milliseconds: 0}).toISO({suppressMilliseconds:true, format: 'basic'});
+function getCategory (type) {
+  switch (type) {
+    case 'LECT':
+      return 'Lecture'
+    case 'TUTA':
+      return 'Tutorial'
+    case 'SEMA':
+      return 'Seminar'
+    case 'PROBA':
+      return 'Problems Class'
+  }
+
+  if (type.substr(0, 4) === 'PRAC') {
+    return 'Practical'
+  }
+
+  return ''
+}
+
+export function generateICSString (modules) {
+  const events = [];
+  const timestamp_now = DateTime.utc().set({ milliseconds: 0 }).toISO({ suppressMilliseconds: true, format: 'basic' });
   modules.forEach(
     module => module.activities.forEach(
       activity => activity.final_timings.forEach(
@@ -43,6 +62,7 @@ ${foldLine('UID:' + uuidv4() + '@goodyguts.github.io')}
 CREATED:${timestamp_now}
 ${foldLine('LOCATION:' + formatText(activity.room))}
 ${foldLine('DESCRIPTION:' + formatText(activity.cal_description))}
+${foldLine('CATEGORIES:' + formatText(getCategory(activity.type)))}
 END:VEVENT`
           )
         })));
