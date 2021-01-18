@@ -27,19 +27,17 @@ function changeTiming(timing_dt) {
 }
 
 function getCategory (type) {
-  switch (type) {
+  switch (type.substr(0, 4)) {
     case 'LECT':
       return 'Lecture'
     case 'TUTA':
       return 'Tutorial'
     case 'SEMA':
       return 'Seminar'
-    case 'PROBA':
+    case 'PROB':
       return 'Problems Class'
-  }
-
-  if (type.substr(0, 4) === 'PRAC') {
-    return 'Practical'
+    case 'PRAC':
+      return 'Practical'
   }
 
   return ''
