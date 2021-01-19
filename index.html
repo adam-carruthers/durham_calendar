@@ -152,7 +152,7 @@
           Logging into Google is safe but this option is for those who remain uncomfortable with granting permissions.
           This option also works for other calendars like Microsoft Outlook.
           Using this option creates a calendar file you can import into most major calendars.
-          Setting event color is not possible with this option.
+          Setting color is more difficult with this option.
         </p>
         <div class="mt-2">
           <small class="text-white">If you decide to continue this way</small><br>
@@ -265,6 +265,29 @@
     <p>
       To upload other terms, refresh the page when you're done.
     </p>
+    <div class="w-100 mb-4 border rounded text-left p-3">
+      <h4>Add calendar colouring</h4>
+      <p>We can try and make it so your calendar software attempts to color your calendar based on your:</p>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="ical-category-radio" id="ical-cat-1" value="No Category" checked>
+        <label class="form-check-label" for="ical-cat-1">
+          Nothing (don't color my calendar)
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="ical-category-radio" id="ical-cat-2" value="Activity">
+        <label class="form-check-label" for="ical-cat-2">
+          Activity Type (aka lectures will be one colour, seminars another, practicals a third, etc).
+          Warning, this method can easily miscategorize a particular activity.
+        </label>
+      </div>
+      <div class="form-check">
+        <input class="form-check-input" type="radio" name="ical-category-radio" id="ical-cat-3" value="Module">
+        <label class="form-check-label" for="ical-cat-3">
+          Module (all activities from one module will be a particular color)
+        </label>
+      </div>
+    </div>
     <button type="button" class="btn btn-light btn-lg mb-4" id="btn-non-magic">Magic!</button>
     <div class="mb-5 border rounded p-4">
       <em>Found this useful?</em>
