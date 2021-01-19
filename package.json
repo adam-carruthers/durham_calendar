@@ -6,7 +6,7 @@
   "author": "Adam Carruthers (goodyguts)",
   "scripts": {
     "build": "parcel build index.html privacy_policy.html --public-url ./ --out-dir docs",
-    "dev": "parcel index.html privacy_policy.html --open",
+    "dev": "parcel index.html privacy_policy.html --open --out-dir docs",
     "start": "npm run build && npm run dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,10 +15,11 @@
   },
   "dependencies": {
     "elliptic": ">=6.5.3",
-    "lodash": ">=4.17.19",
-    "luxon": "^1.24.1",
+    "lodash": "^4.17.20",
+    "luxon": "^1.25.0",
+    "node-forge": ">=0.10.0",
     "noty": "^3.2.0-beta",
-    "preact": "^10.4.6",
-    "uuid": "^8.3.1"
+    "preact": "^10.5.10",
+    "uuid": "^8.3.2"
   }
 }
