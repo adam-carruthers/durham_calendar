@@ -1,1 +1,1 @@
-{"activities_easter": [], "activities_epiphany": [], "activities_michaelmas": [], "code": "THEO43330", "title": "Patristic Exegesis"}
+{"activities_easter": [], "activities_epiphany": [], "activities_michaelmas": [{"code": "SEM/001", "code_info": null, "code_long": "THEO43330/SEM/001", "day": "2021-10-08", "description": "Patristic Exegesis", "end": "17:15", "id": 0, "planned_size": "14", "room": "PG24", "staff": "\u00a0", "start": "15:00", "type": "SEM", "weeks": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]}], "code": "THEO43330", "title": "Patristic Exegesis"}
