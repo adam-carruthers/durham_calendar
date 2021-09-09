@@ -1,1 +1,1 @@
-{"activities_easter": [], "activities_epiphany": [], "activities_michaelmas": [], "code": "SGIA40560", "title": "Dissertation"}
+{"activities_easter": [], "activities_epiphany": [], "activities_michaelmas": [{"code": "WORK/001", "code_info": null, "code_long": "SGIA40560/WORK/001", "day": "2021-10-06", "description": "Dissertation", "end": "13:00", "id": 0, "planned_size": "50", "room": "E102", "staff": "Dr Olga Demetriou", "start": "11:00", "type": "WORK", "weeks": [4]}], "code": "SGIA40560", "title": "Dissertation"}
