@@ -376,7 +376,13 @@ function initGoogleClient() {
     gapi.auth2.getAuthInstance().isSignedIn.listen(updateGoogleSignInStatus)
 
     // Update it to the current signed in state
-    updateGoogleSignInStatus(gapi.auth2.getAuthInstance().isSignedIn.get())
+    const isSignedInAtStart = gapi.auth2.getAuthInstance().isSignedIn.get();
+    if (isSignedInAtStart) {
+      googleSignOut();  
+      // Lots of people have been having issues, hopefully this solves it.
+      // My theory is that the issue is people being signed in already but their permissions have expired.
+    }
+    updateGoogleSignInStatus(false);
     btn_authorize.on('click', () => {
       gapi.auth2.getAuthInstance().signIn().catch(() => {
         new Noty({
