@@ -17,7 +17,7 @@
     "elliptic": "^6.5.4",
     "lodash": "^4.17.21",
     "luxon": "^1.28.0",
-    "node-forge": ">=0.10.0",
+    "node-forge": ">=1.0.0",
     "noty": "^3.2.0-beta-deprecated",
     "preact": "^10.5.14",
     "uuid": "^8.3.2"
